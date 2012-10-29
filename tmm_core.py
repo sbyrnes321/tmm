@@ -23,6 +23,8 @@ from numpy import cos, inf, zeros, array, exp, conj, nan, isnan
 import scipy as sp
 import numpy as np
 
+import sys
+EPSILON = sys.float_info.epsilon # typical floating-point calculation error
 
 def snell(n_1,n_2,th_1):
     """
@@ -199,7 +201,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
         raise ValueError("Problem with n_list or d_list!")
     if (d_list[0] != inf) or (d_list[-1] != inf):
         raise ValueError('d_list must start and end with inf!')
-    if (np.real_if_close(n_list[0]*np.sin(th_0))).imag != 0:
+    if abs((n_list[0]*np.sin(th_0)).imag) > 100*EPSILON:
         raise ValueError('Error in n0 or th0!')
     num_layers = n_list.size
 
