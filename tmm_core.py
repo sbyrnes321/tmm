@@ -504,14 +504,16 @@ def absorp_in_each_layer(coh_tmm_data):
 
     coh_tmm_data is output of coh_tmm()
     """
-    d_list = coh_tmm_data['d_list']
-    num_layers = len(d_list)
+    num_layers = len(coh_tmm_data['d_list'])
+    power_entering_each_layer = zeros(num_layers)
+    power_entering_each_layer[0] = 1
+    power_entering_each_layer[1] = coh_tmm_data['power_entering']
+    power_entering_each_layer[-1] = coh_tmm_data['T']
+    for i in xrange(2,num_layers-1):
+        power_entering_each_layer[i] = position_resolved(i,0,coh_tmm_data)['poyn']
     final_answer = zeros(num_layers)
-    final_answer[0] = 1 - coh_tmm_data['power_entering']
-    final_answer[-1] = coh_tmm_data['T']
-    for i in xrange(1,num_layers-1):
-        final_answer[i] = (position_resolved(i,0,coh_tmm_data)['poyn'] -
-                            position_resolved(i+1,0,coh_tmm_data)['poyn'])
+    final_answer[0:-1] = -np.diff(power_entering_each_layer)
+    final_answer[-1] = power_entering_each_layer[-1]
     return final_answer
 
 def inc_group_layers(n_list,d_list,c_list):
