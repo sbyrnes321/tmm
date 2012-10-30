@@ -26,6 +26,19 @@ import numpy as np
 import sys
 EPSILON = sys.float_info.epsilon # typical floating-point calculation error
 
+def make_2x2_array(a, b, c, d, dtype=float):
+    """
+    Makes a 2x2 numpy array of [[a,b],[c,d]]
+    
+    Same as "numpy.array([[a,b],[c,d]], dtype=float)", but ten times faster
+    """
+    my_array = np.empty((2,2),dtype=dtype)
+    my_array[0,0] = a
+    my_array[0,1] = b
+    my_array[1,0] = c
+    my_array[1,1] = d
+    return my_array
+
 def snell(n_1,n_2,th_1):
     """
     return angle theta in layer 2 with refractive index n_2, assuming
@@ -247,13 +260,14 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     M_list = zeros((num_layers,2,2),dtype=complex)
     for i in xrange(1,num_layers-1):
         M_list[i] = (1/t_list[i,i+1]) * np.dot(
-            array([[exp(-1j*delta[i]),0],[0,exp(1j*delta[i])]]),
-            array([[1,r_list[i,i+1]],[r_list[i,i+1],1]]))
-    Mtilde = array([[1,0],[0,1]], dtype=complex)
+            make_2x2_array(exp(-1j*delta[i]), 0, 0, exp(1j*delta[i]),
+                           dtype=complex),
+            make_2x2_array(1, r_list[i,i+1], r_list[i,i+1], 1, dtype=complex))
+    Mtilde = make_2x2_array(1,0,0,1, dtype=complex)
     for i in xrange(1,num_layers-1):
         Mtilde = np.dot(Mtilde,M_list[i])
-    Mtilde = np.dot(array([[1,r_list[0,1]],[r_list[0,1],1]])/t_list[0,1],
-                    Mtilde)
+    Mtilde = np.dot(make_2x2_array(1, r_list[0,1], r_list[0,1] ,1,
+                                   dtype=complex)/t_list[0,1], Mtilde)
 
     #Net complex transmission and reflection amplitudes
     r=Mtilde[1,0]/Mtilde[0,0]
