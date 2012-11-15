@@ -155,7 +155,7 @@ $$ t_s = \frac{2n_1 \cos \theta_1}{n_1 \cos \theta_1 + n_2 \cos \theta_2} \quad 
 
 Now we have $N$ materials, numbered $0,1,\ldots,N-1$, where the first (``0'') and last (``$N-1$'') layer are semi-infinite. Light with amplitude 1 is entering towards layer 1 (Fig.~\ref{vwdefn}).
 
-At the interface between the $(n-1)$st and $n$th material, let $v_n$ be the amplitude of the wave on the $n$th side heading forwards (away from the boundary), and let $w_n$ be the amplitude on the nth side heading backwards (towards the boundary). (Fig.~\ref{vwdefn}.) (($v_0,w_0$) are undefined, while $v_N=t$ and $w_N=0$.) Then
+At the interface between the $(n-1)$st and $n$th material, let $v_n$ be the amplitude of the wave on the $n$th side heading forwards (away from the boundary), and let $w_n$ be the amplitude on the nth side heading backwards (towards the boundary). (Fig.~\ref{vwdefn}.) (($v_0,w_0$) are undefined, while $v_{N-1}=t$ and $w_{N-1}=0$.) Then
 $$\smat v_n \\ w_n \emat = M_n \smat v_{n+1}\\w_{n+1}\emat$$
 where\footnote{My $M$'s are a bit different than Sernelius's, because I'm using $v$ and $w$, the wave amplitudes just \emph{after} an interface, while Sernelius is using $x$ and $y$, the wave amplitudes just \emph{before} an interface.}
 $$M_n = \smat e^{- i \delta_n} & 0 \\ 0 & e^{i \delta_n} \emat \smat 1 & r_{n,n+1} \\ r_{n,n+1} & 1 \emat \frac{1}{t_{n,n+1}}$$
