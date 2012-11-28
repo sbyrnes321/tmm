@@ -272,6 +272,22 @@ Then the formula for $\tilde{L}$ is
 $$\tilde{L} = \frac{1}{T_{0,1}} \smat 1 & -R_{1,0} \\  R_{0,1} & T_{1,0}T_{0,1} -  R_{1,0}R_{0,1} \emat L_1 L_2 \cdots L_{N-1} = \smat \tilde{L}_{00} & \tilde{L}_{01} \\ \tilde{L}_{10} & \tilde{L}_{11} \emat$$
 $$T = 1/\tilde{L}_{00}, \quad R = \tilde{L}_{10}/\tilde{L}_{00}$$
 
+\section{Thick ``incoherent'' films: Absorption profile, Coherence length}
+
+Absorption as a function of depth is not implemented in the program for incoherent layers (at least for now); this section explains why.
+
+Calculating the absorption profile within an ``incoherent'' layer is not simple to do correctly. If you look up close, the absorption as a function of position would be oscillatory near an interface due to interference between the incoming and outgoing beams; with the oscillations gradually dying down into a smooth exponential farther away from the interface. The ``coherence length'' describes how far from the interface you need to go before the oscillations die down. For example, if the incoherence is caused by using a not-quite-monochromatic light source, the coherence length would be related to the bandwidth of the light.
+
+If you are only interested in calculating the \emph{total} amount of light absorbed in each layer, it turns out that you do not need to know the coherence length!! More precisely, the coherence length does not effect the total absorption in (and transmission through) an incoherent layer under two assumptions (which are usually satisfied): (1) The coherence length is large compared to a wavelength; (2) The coherence length is small compared to the layer thickness.\footnote{The mathematics of this is that when you have sinusoidal oscillations that die away, their integral is independent of the precise decay properties. Mathematically, $\int_0^\infty e^{ikx} e^{-\alpha x} dx = \frac{1}{-ik+\alpha} \approx \frac{1}{-ik}$; the integral is approximately independent of $\alpha$ as long as $\alpha \ll k$, i.e. as long as the decay length is much larger than the oscillation length.}
+
+That's the reason that you are not prompted to input coherence lengths in any of the calculations above.
+
+On the other hand, if you want to calculate absorption as a function of depth in an incoherent layer, you \emph{do} need to know exactly what the coherence length is.
+
+I'm not sure what to do here. Asking users to input the coherence length seems a bad strategy as most people probably wouldn't know what it is. Assuming a coherence length of 0 would give grossly inaccurate results very close to the interfaces, which would be OK in some applications but not others.
+
+Since I cannot think of a good way to do it, absorption as a function of depth is not implemented for incoherent layers. Sorry! If you want to see absorption as a function of depth for an incoherent layer, maybe you can use the coherent program and average over slightly varying thicknesses or wavelengths (as appropriate) to get rid of spurious oscillations.
+
 \newpage
 
 \renewcommand{\thesection}{\Alph{section}}
