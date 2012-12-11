@@ -7,7 +7,7 @@ Examples of plots and calculations using the tmm package.
 from __future__ import division
 
 from tmm import *
-from numpy import pi, linspace
+from numpy import pi, linspace, inf, array
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
@@ -21,18 +21,20 @@ def sample1():
     air on both sides. Plotting reflected intensity versus wavenumber, at two
     different incident angles.
     """
-    d_list = [inf,100,300,inf] #in nm
+    # list of layer thicknesses in nm
+    d_list = [inf,100,300,inf]
+    # list of refractive indices
     n_list = [1,2.2,3.3+0.3j,1]
-    plotpoints=400
-    ks=linspace(0.0001,.01,plotpoints) #in nm^-1
-    Rnorm=zeros(plotpoints)
-    R45=zeros(plotpoints)
-    for i in range(plotpoints):
-        norm_data = coh_tmm('s',n_list, d_list, 0, 1/ks[i]) #in nm
-        s45_data = coh_tmm('s',n_list, d_list, 45*degree, 1/ks[i]) #in nm
-        p45_data = coh_tmm('p',n_list, d_list, 45*degree, 1/ks[i]) #in nm
-        Rnorm[i]=norm_data['R']
-        R45[i]=(s45_data['R']+p45_data['R'])/2
+    # list of wavenumbers to plot in nm^-1
+    ks=linspace(0.0001,.01,num=400)
+    # initialize lists of y-values to plot
+    Rnorm=[] 
+    R45=[]
+    for k in ks:
+		# For normal incidence, s and p polarizations are identical.
+		# I arbitrarily decided to use 's'.
+        Rnorm.append(coh_tmm('s',n_list, d_list, 0, 1/k)['R'])
+        R45.append(unpolarized_RT(n_list, d_list, 45*degree, 1/k)['R'])
     kcm = ks * 1e7 #ks in cm^-1 rather than nm^-1
     plt.figure()
     plt.plot(kcm,Rnorm,'blue',kcm,R45,'purple')
@@ -62,8 +64,7 @@ def sample2():
     T_list = []
     for lambda_vac in lambda_list:
         n_list = [1, material_nk_fn(lambda_vac), 1]
-        T_new = coh_tmm('s',n_list,d_list,0,lambda_vac)['T']
-        T_list.append(T_new)
+        T_list.append(coh_tmm('s',n_list,d_list,0,lambda_vac)['T'])
     plt.figure()
     plt.plot(lambda_list,T_list)
     plt.xlabel('Wavelength (nm)')
@@ -78,14 +79,13 @@ def sample3():
     Tompkins, 2005.
     """
     n_list=[1,1.46,3.87+0.02j]
-    plotpoints=100
-    ds=linspace(0,1000,plotpoints) #in nm
-    psis=zeros(plotpoints)
-    Deltas=zeros(plotpoints)
-    for i in range(plotpoints):
-        e_data=ellips(n_list, [inf,ds[i],inf], 70*degree, 633) #in nm
-        psis[i]=e_data['psi']/degree # angle in degrees
-        Deltas[i]=e_data['Delta']/degree # angle in degrees
+    ds=linspace(0,1000,num=100) #in nm
+    psis=[]
+    Deltas=[]
+    for d in ds:
+        e_data=ellips(n_list, [inf,d,inf], 70*degree, 633) #in nm
+        psis.append(e_data['psi']/degree) # angle in degrees
+        Deltas.append(e_data['Delta']/degree) # angle in degrees
     plt.figure()
     plt.plot(ds,psis,ds,Deltas)
     plt.xlabel('SiO2 thickness (nm)')
@@ -103,15 +103,17 @@ def sample4():
     pol='p'
     coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
     
-    plotpoints=1000
-    ds = linspace(0,400,plotpoints) #position in structure
-    poyn=zeros(plotpoints)
-    absor=zeros(plotpoints)
-    for i in range(plotpoints):
-        layer, d_in_layer = find_in_structure_with_inf(d_list,ds[i])
+    ds = linspace(0,400,num=1000) #position in structure
+    poyn=[]
+    absor=[]
+    for d in ds:
+        layer, d_in_layer = find_in_structure_with_inf(d_list,d)
         data=position_resolved(layer,d_in_layer,coh_tmm_data)
-        poyn[i] = data['poyn']
-        absor[i] = data['absor']
+        poyn.append(data['poyn'])
+        absor.append(data['absor'])
+    # convert data to numpy arrays for easy scaling in the plot
+    poyn = array(poyn)
+    absor = array(absor)
     plt.figure()
     plt.plot(ds,poyn,'blue',ds,200*absor,'purple')
     plt.xlabel('depth (nm)')
