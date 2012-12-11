@@ -1,3 +1,4 @@
 ﻿version 0.0.1, 2012-10-28 -- initial release
 version 0.0.2, 2012-10-28 -- fix various packaging mistakes
 version 0.0.3, 2012-10-28 -- fix various packaging mistakes
+version 0.1.0, 2012-12-11 -- corrected various errors in the manual; some minor implementation changes for calculation speed (following profiling) and readability. There should be no API changes. For precise list of all changes, see https://github.com/sbyrnes321/tmm/
