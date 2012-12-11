@@ -42,7 +42,7 @@
 
 \section{Introduction}
 
-Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 29 March 2012.
+Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 11 December 2012.
 
 This is a group of programs written in Python / NumPy for simulating light propagation in planar multilayer thin films, including the effects of multiple internal reflections and interference, using the ``Transfer Matrix Method''. It can also simulate combinations of thin and thick films (e.g. a thick piece of glass with a multi-layer antireflection coating on one side and a mirror on the other side), or purely thick films.
 
@@ -50,7 +50,7 @@ In addition to calculating how much light is transmitted and reflected, the prog
 
 It can also calculate the parameters measured in ellipsometry.
 
-There are three files: \verb=fresnel.py= contains all the main programs, \verb=fresnel_samples.py= contains a few example calculations to get you started, and \verb=fresnel_tests.py= contains a number of programs that perform various tests and consistency checks to confirm that everything is coded and running correctly.
+There are three files: \verb=tmm_core.py= contains all the main programs, \verb=examples.py= contains a few example calculations to get you started, and \verb=tests.py= contains a number of programs that perform various tests and consistency checks to confirm that everything is coded and running correctly. There is also the standard \verb=__init__.py=, the home of the main \verb=tmm= namespace, into which are imported all the \verb=tmm_core= functions.
 
 \section{Other people's programs}
 
@@ -71,21 +71,22 @@ I have done a few consistency checks between my program and others. They tend to
 
 \section{Installation}
 
-Requires SciPy and NumPy to run. The ``examples'' also use Matplotlib.
-
-Version requirements: Personally, I am using Python 2.7.2, SciPy 0.9.0, NumPy 1.6.1, Matplotlib 1.1.0, within Spyder 2.0.13.
+Requires SciPy and NumPy to run. The ``examples'' also use Matplotlib. Written in Python 2.7. It is very likely compatible with Python 2.6 and perhaps earlier, but I haven't checked. Install via \verb=pip= or just download it directly (it's pure python).
 
 \subsection{Installation for dummies}
 
 If you've never used Python before, getting started can be a bit tricky. See \url{http://sjbyrnes.com/?page_id=67} for installation advice.
 
-OK, now that you have successfully installed Python, NumPy, SciPy, etc., you can start by typing, for example,
+You can install this package by typing \verb=pip install tmm= into a terminal / command line. Or, since the package is pure python and requires no setup or compilation, you can just download it directly. Put the \verb=tmm= folder somewhere that Python can find it. (If you're not sure, type \verb=import sys; sys.path= into IPython.)
+
+To get going, try typing the following in IPython (pylab mode):
 
 \begin{verbatim}
-In [1]: sys.path.append('C:\\FolderWhereIDownloadedThePrograms')
-In [2]: import fresnel_samples
-In [3]: fresnel_samples.sample1()
+>> import tmm.examples
+>> tmm.examples.sample1()
 \end{verbatim}
+
+A plot should pop up.
 
 \section{Units}
 
