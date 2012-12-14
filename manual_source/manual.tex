@@ -23,8 +23,6 @@
 %FORMULA MACROS
 \renewcommand{\(}{\left(}
 \renewcommand{\)}{\right)}
-\renewcommand{\[}{\left[}
-\renewcommand{\]}{\right]}
 \renewcommand{\Im}{\operatorname{Im}}
 \renewcommand{\Re}{\operatorname{Re}}
 
@@ -33,7 +31,6 @@
 \renewcommand{\k}{\mathbf{k}}
 \newcommand{\hatk}{\hat{\mathbf{k}}}
 \renewcommand{\S}{\mathbf{S}}
-\newcommand{\n}{\hat{\mathbf{n}}}
 \renewcommand{\r}{\mathbf{r}}
 \newcommand{\x}{\hat{\mathbf{x}}}
 \newcommand{\y}{\hat{\mathbf{y}}}
@@ -42,7 +39,7 @@
 
 \section{Introduction}
 
-Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 11 December 2012.
+Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 14 December 2012.
 
 This is a group of programs written in Python / NumPy for simulating light propagation in planar multilayer thin films, including the effects of multiple internal reflections and interference, using the ``Transfer Matrix Method''. It can also simulate combinations of thin and thick films (e.g. a thick piece of glass with a multi-layer antireflection coating on one side and a mirror on the other side), or purely thick films.
 
@@ -51,6 +48,8 @@ In addition to calculating how much light is transmitted and reflected, the prog
 It can also calculate the parameters measured in ellipsometry.
 
 There are three files: \verb=tmm_core.py= contains all the main programs, \verb=examples.py= contains a few example calculations to get you started, and \verb=tests.py= contains a number of programs that perform various tests and consistency checks to confirm that everything is coded and running correctly. There is also the standard \verb=__init__.py=, the home of the main \verb=tmm= namespace, into which are imported all the \verb=tmm_core= functions.
+
+I did not compile any API documentation (list of functions and parameters), except the source code itself. You should read \verb=tmm_core.py=: I tried hard to put complete information into each function docstring about what the function does and how to use it. Also look at \verb=examples.py= to see examples of various kinds of calculations and plots.
 
 \section{Other people's programs}
 
@@ -184,23 +183,23 @@ I will start by deriving the expression for the normal component of the Poynting
 \bea
 \E &=& E_f \y + E_b \y \\
 \H &\propto& n E_f \( - \cos \theta \x +  \sin \theta \z\) + n E_b\( \cos \theta \x + \sin \theta \z\) \\
-\S \cdot \n &=& \frac12 \Re[ \n \cdot (\E^* \times \H)] \propto \Re[(E_f^*+E_b^*) (E_f - E_b)n \cos \theta]\eea
+\S \cdot \z &=& \frac12 \Re[ \z \cdot (\E^* \times \H)] \propto \Re[(E_f^*+E_b^*) (E_f - E_b)n \cos \theta]\eea
 After normalizing to incident power:
-$$\text{s-polarization:} \qquad \S \cdot \n = \frac{\Re\[ (n) (\cos \theta) (E_f^* + E_b^*) (E_f - E_b)\]}{\Re\[ n_0 \cos \theta_0\] }$$
+$$\text{s-polarization:} \qquad \S \cdot \z = \frac{\Re\left[ (n) (\cos \theta) (E_f^* + E_b^*) (E_f - E_b)\right]}{\Re\left[ n_0 \cos \theta_0\right] }$$
 
 Next, p-polarization:
 \bea
 \E &=& E_f(-\sin \theta \z +  \cos \theta \x) + E_b(- \sin \theta \z -  \cos \theta \x) \\
 \H &\propto& n E_f \y + n E_b \y \\
-\S \cdot \n &=& \frac12\Re[ \n \cdot (\E^* \times \H)] \propto \Re[(\cos \theta)^*(E_f^*-E_b^*) (E_f + E_b)n ]\eea
+\S \cdot \z &=& \frac12\Re[ \z \cdot (\E^* \times \H)] \propto \Re[(\cos \theta)^*(E_f^*-E_b^*) (E_f + E_b)n ]\eea
 After normalizing to incident power:
-$$\text{p-polarization:} \qquad \S \cdot \n = \frac{\Re\[ (n) (\cos \theta^*) (E_f + E_b) (E_f^* - E_b^*)\]}{\Re \[ n_0 \cos \theta_0^* \]}$$
+$$\text{p-polarization:} \qquad \S \cdot \z = \frac{\Re\left[ (n) (\cos \theta^*) (E_f + E_b) (E_f^* - E_b^*)\right]}{\Re \left[ n_0 \cos \theta_0^* \right]}$$
 
 \section{$T$ (transmitted intensity)}
 
 To get the formula for $T$, the fraction of power transmitted, we just apply the Poynting vector formula above to the special case of the final medium, where $E_b=0$ (no light is flowing back towards the material from the other side):
-$$\text{s-polarization:} \qquad T = |t|^2\frac{ \Re\[ n \cos \theta\]}{\Re \[ n_0 \cos \theta_0 \] }$$
-$$\text{p-polarization:} \qquad T = |t|^2\frac{ \Re\[ n \cos \theta^* \]}{\Re \[ n_0 \cos \theta_0^* \] }$$
+$$\text{s-polarization:} \qquad T = |t|^2\frac{ \Re\left[ n \cos \theta\right]}{\Re \left[ n_0 \cos \theta_0 \right] }$$
+$$\text{p-polarization:} \qquad T = |t|^2\frac{ \Re\left[ n \cos \theta^* \right]}{\Re \left[ n_0 \cos \theta_0^* \right] }$$
 where $T$ is the fraction of power transmitted and $t=E_f/E_0$ is the transmission amplitude.\footnote{In some references, the complex conjugation for p-polarization is omitted, but I'm very confident it's correct. Usually the incident and final media are non-absorbing, e.g. air, so $\cos \theta$ is real and it doesn't matter whether you conjugate $\theta$ or not.}
 
 \section{$R$ (reflected intensity) and ``power entering''}
@@ -215,30 +214,36 @@ Quick summary of Appendix A: For an interface between two semi-infinite media, \
 \section{Absorbed energy density}
 Next, absorbed energy density at a given depth. In principle this has units of [power]/[volume], but we can express it as a multiple of incoming light power density on the material, which has units[power]/[area], so that absorbed energy density has units of 1/[length]. This is the negative derivative (with respect to distance) of the ``Poynting'' expressions above. Differentiating is straightforward, using $E_f(z) \propto e^{i k_z z}$ and $E_b(z) \propto e^{-i k_z z}$. (Here, $k_z=2\pi n\cos\theta/\lambda_{vac}$.) The result is:
 \bea
-\text{s-polarization:} \qquad a(z) &=& \frac{|E_f+E_b|^2 \Im\[n \cos(\theta) k_z\]}{\Re\[ n_0 \cos \theta_0 \] } \\
-\text{p-polarization:} \qquad a(z) &=& \frac{\Im\[n \cos(\theta^*)\(k_z|E_f-E_b|^2-k_z^*|E_f+E_b|^2\)\]}{\Re \[ n_0 \cos \theta_0^* \] }
+\text{s-polarization:} \qquad a(z) &=& \frac{|E_f+E_b|^2 \Im\left[ n \cos(\theta) k_z\right] }{\Re\left[ n_0 \cos \theta_0 \right] } \\
+\text{p-polarization:} \qquad a(z) &=& \frac{\Im\left[ n \cos(\theta^*)\(k_z|E_f-E_b|^2-k_z^*|E_f+E_b|^2\)\right]}{\Re \left[ n_0 \cos \theta_0^* \right] }
 \eea
 
 Within a given layer, absorption is an analytical function:
 $$a(z) = A_1e^{2 z \Im(k_z)} + A_2e^{-2 z \Im(k_z)} + A_3e^{2iz\Re(k_z)} + A_3^* e^{-2iz \Re(k_z)}$$
 where:
 \bea
-\text{s-polarization}: A_1 &=& \frac{\Im\[n \cos(\theta) k_z\]}{\Re\[ n_0 \cos \theta_0 \] }|w|^2\\
-A_2 &=& \frac{\Im\[n \cos(\theta) k_z\]}{\Re \[n_0 \cos \theta_0 \] }|v|^2\\
-A_3 &=& \frac{\Im\[n \cos(\theta) k_z\]}{\Re \[n_0 \cos \theta_0 \] }vw^*\\
-\text{p-polarization}: A_1 &=& \frac{2\Im\[k_z\] \Re\[n \cos(\theta^*)\]}{\Re \[n_0 \cos \theta_0^* \] } |w|^2\\
-A_2 &=& \frac{2\Im\[k_z\] \Re\[n \cos(\theta^*)\]}{\Re\[ n_0 \cos \theta_0^* \] } |v|^2\\
-A_3 &=& \frac{2\Re\[k_z\] \Im\[n \cos(\theta^*)\]}{\Re \[ n_0 \cos \theta_0^* \] } vw^*
+\text{s-polarization}: A_1 &=& \frac{\Im\left[ n \cos(\theta) k_z\right] }{\Re\left[ n_0 \cos \theta_0 \right] }|w|^2\\
+A_2 &=& \frac{\Im\left[ n \cos(\theta) k_z\right] }{\Re \left[ n_0 \cos \theta_0 \right] }|v|^2\\
+A_3 &=& \frac{\Im\left[ n \cos(\theta) k_z\right] }{\Re \left[ n_0 \cos \theta_0 \right] }vw^*\\
+\text{p-polarization}: A_1 &=& \frac{2\Im\left[ k_z\right] \Re\left[ n \cos(\theta^*)\right] }{\Re \left[ n_0 \cos \theta_0^* \right] } |w|^2\\
+A_2 &=& \frac{2\Im\left[ k_z \right] \Re \left[ n \cos(\theta^*)\right] }{\Re \left[ n_0 \cos \theta_0^* \right] } |v|^2\\
+A_3 &=& \frac{2\Re\left[ k_z \right] \Im \left[ n \cos(\theta^*)\right] }{\Re \left[ n_0 \cos \theta_0^* \right] } vw^*
 \eea
 where $v = E_f(0)$ and $w=E_b(0)$.
 
-\section{Branch cuts}
+\section{Branch cuts \label{branchcuts}}
 
-Snell's law gives $\theta_i = \arcsin(n_0 \sin(\theta_0)/n_i)$. However, the arcsin function is ambiguous--it has branch cuts in the complex plane. How to get the right $\theta$?? With different choices of $\theta$, you can flip the sign of $\cos \theta$, so it's important to get it right.
+Snell's law gives $\theta_i = \arcsin(n_0 \sin(\theta_0)/n_i)$. However, the arcsin function is ambiguous--it has branch cuts in the complex plane. How do we get the right $\theta$??
 
-I've only checked the case I care about, $\Re n>0$ and $\Im n \geq 0$. In that case, the naive calculation (using the default behavior of arcsine) gives the correct answer for all cases, in both Python\footnote{Note: For python, you need to use the arcsine function in SciPy, not the one in NumPy, so that when you calculate the arcsine of a real number greater than 1, e.g. total internal reflection, you get a complex angle instead of nan. Or, you can use NumPy arcsine if you cast its argument to complex.} and Mathematica. I think I checked this pretty carefully, see the appendix (Section~\ref{appendixbranchcuts})for details.
+There are actually only two non-equivalent choices. If $\theta$ is one solution, then $\pi-\theta$ is the other. You may recognize that we are choosing which of the two waves in medium $i$ is called ``forward-traveling'' and which one is called ``backward-traveling''. How do we make the right choice??
 
-In more specialized cases, like negative-index materials ($\Re n <0$) or stimulated-emission media ($\Im n<0$), results are not guaranteed! Please check this before using!
+Good news: In the intermediate, finite-thickness layers, the choice actually doesn't matter. We solve for \emph{both} the forward- and backward-traveling waves, so it doesn't matter which wave has which name. The two choices of $\theta_i$ will switch $v_i$ with $w_i$, but won't affect observable quantities like reflectance, absorption, etc.
+
+Bad news: The choice of $\theta$ versus $\pi-\theta$ \emph{does} matter very much in the starting semi-infinite layer (where the ``forward-traveling'' wave amplitude is set to 1), and in the final semi-infinite layer (where the ``backwards-traveling'' wave amplitude is set to 0). In these layers, we need to choose $\theta$ correctly.
+
+I've only checked the case I care about, $\Re n>0$ and $\Im n \geq 0$. In that case, the naive calculation (using the default behavior of arcsine) gives the correct answer for all cases, in both Python\footnote{Note: For python, you need to use the arcsine function in SciPy, not the one in NumPy, so that when you calculate the arcsine of a real number greater than 1, e.g. total internal reflection, you get a complex angle instead of nan. Or, you can use NumPy arcsine if you cast its argument to complex.} and Mathematica. I think I checked this pretty carefully, see the appendix (Section~\ref{appendixbranchcuts}) for details.
+
+In more specialized cases, like negative-index materials ($\Re n <0$) or stimulated-emission media ($(\Im n)/(\Re n)<0$), results are not guaranteed! Please check this before using, if your starting or ending layer is one of these!
 
 \section{Thick ``incoherent'' films: Introduction}
 That finishes the thin-film part of the program. Next, thick films. Here we are interested in hybrid structures containing both thick and thin layers (or even just thick layers). Light loses its coherence when traveling through the thick layers--i.e., the Fabry-Perot fringes are so close together that they cannot be resolved by the experimental measurement, due to factors such as random thickness variations, propagation angle variations, and/or wavelength variations. Instead of seeing the fringes, you just see the average.
@@ -302,10 +307,10 @@ The interesting thing---which had me confused at first---is that the normalized 
 
 To get the exact formulas for Poynting vector at the initial interface, called \verb=power_entering= in the program, we just plug into the normal Poynting vector formula with $E_f = 1$ and $E_b = r$, to get:
 \begin{center}\underline{s-polarization:}\end{center}
-$$\text{power entering} = \frac{\Re\[ n_0 \cos \theta_0  (1 + r^*) (1 -r)\]}{\Re\[ n_0 \cos \theta_0\] } = (1-R) + 2 \Im[r]\frac{\Im[n_0 \cos \theta_0]}{\Re[n_0 \cos\theta_0]}$$
+$$\text{power entering} = \frac{\Re \left[ n_0 \cos \theta_0  (1 + r^*) (1 -r) \right] }{\Re \left[ n_0 \cos \theta_0 \right] } = (1-R) + 2 \Im[r]\frac{\Im[n_0 \cos \theta_0]}{\Re[n_0 \cos\theta_0]}$$
 
 \bskip\begin{center}\underline{p-polarization:}\end{center}
-$$\text{power entering} = \frac{\Re\[ n_0 \cos \theta_0^* (1 +r) (1 - r^*)\]}{\Re \[ n_0 \cos \theta_0^* \]} = (1-R) - 2 \Im[r]\frac{\Im[n_0 \cos \theta_0^*]}{\Re[n_0 \cos\theta_0^*]}$$
+$$\text{power entering} = \frac{\Re \left[ n_0 \cos \theta_0^* (1 +r) (1 - r^*) \right] }{\Re \left[ n_0 \cos \theta_0^* \right] } = (1-R) - 2 \Im[r]\frac{\Im[n_0 \cos \theta_0^*]}{\Re[n_0 \cos\theta_0^*]}$$
 
 The first term is what we expect, the second term is strange.
 
@@ -318,7 +323,7 @@ To explain this funny result, start with how $R$ is defined (in the case of an a
 \end{figure}
 
 More generally, we naively expect the Poynting vector for $z<0$ in Fig.~\ref{Rfig} to satisfy
-\be{Snoninterfered} \S(z)\cdot \n = e^{\alpha |z|} - R e^{-\alpha |z|} \qquad \text{[formula for without wave  interference]} \quad \ee
+\be{Snoninterfered} \S(z)\cdot \z = e^{\alpha |z|} - R e^{-\alpha |z|} \qquad \text{[formula for without wave  interference]} \quad \ee
 where the first term comes from the incoming wave and the second term from the reflected wave. It is fine to demand this when the beams do not overlap, but we \emph{CANNOT} use this expression in the ``Interference here'' triangle region of Fig.~\ref{Rfig}. Instead, there is interference between the forward- and backward-moving waves, which causes oscillations in the absorption profile (``hot-spots'' and ``nodes'') (see Fig.~\ref{spatiallyresolvedexample}), so there are corresponding oscillations in the Poynting vector (it's a bit hard to see them in Fig.~\ref{spatiallyresolvedexample} but they're there).  A bit of extra energy is flowing from the nodes to the nearby hot-spots. Thanks to these oscillations, the Poynting vector right at the edge before the start of the structure may not be $1-R$.
 
 If $r$ is real, then there is a node or hot-spot of absorption right at the interface. It turns out that this sort of corresponds to having an integer number of oscillatory cycles, so the oscillations do not effect the power passing through the interface. $R+T=1$ is still valid. But if $r$ is complex, then you have an extra bit of absorption, or deficit of absorption, compared to the non-oscillating baseline expectation of Eq.~(\ref{Snoninterfered}).
@@ -329,7 +334,7 @@ Again, this comes from the fact that $R$ is defined by Eq.~(\ref{Snoninterfered}
 
 To verify that $R=|r|^2$ is the correct expression to use, we use the Poynting vector formula, plugged in at an arbitrary depth $z<0$, using $E_f = \exp(2\pi i n z \cos \theta / \lambda_{vac})$ and $E_b = r \exp(-2\pi i n z \cos\theta/\lambda_{vac})$. I'll just do the s-polarized case:
 \bea
-\S(z)\cdot\n
+\S(z)\cdot\z
 &=& \frac{\Re[n_0 \cos \theta_0 (E_f^* + E_b^*)(E_f-E_b)]}{\Re[n_0 \cos \theta_0]}\\
 &=& \(e^{-4\pi z \Im[n_0 \cos \theta_0]/\lambda_{vac}}-|r|^2 e^{+4\pi z \Im[n_0 \cos \theta_0]/\lambda_{vac})}\) \; +\\
 &\;& + \( \; 2\frac{\Im[n_0 \cos\theta_0]}{\Re[n_0 \cos \theta_0]} \Im [r e^{4\pi i z\Re[n_0  \cos \theta_0]/\lambda_{vac}}] \)\\
@@ -360,6 +365,8 @@ The cosine is more problematic, because there are two choices consistent with Sn
 $$\cos \theta_i = \pm \frac{1}{n_i} \sqrt{n_i^2 - (n_0 \sin \theta_0)^2}$$
 Do we want the $+$ or $-$?? In other words, we can pick between two angles $\theta$ and $\pi-\theta$.
 
+See Section~\ref{branchcuts} for an explanation of what the choice \emph{really} means, and more importantly, why it only matters in the starting and ending semi-infinite layers, but doesn't matter in the intermediate, finite-thickness layers.
+
 \subsection{Case that $\Im n>0, \quad \Re n > 0$}
 
 For an absorbing material ($\Im n > 0$), a clear requirement is that $\Im(n \cos \theta)>0$. That way, $ \Im k_z > 0$, so the $E_f$ wave in the medium decays rather than amplifying. Another clear requirement is that $R>1$ or $T<0$ cannot occur. This translates to $\Re[n \cos\theta]\geq 0$ for s-polarization and $\Re[n \cos \theta^*]\geq 0$ for p-polarization. This amounts to the same thing as saying that the Poynting vector associated with an $E_f$ wave should point forward not backwards.
@@ -383,7 +390,7 @@ $$\arg n_i^2 = 2\phi, \quad 2\phi \leq \arg (n_i^2 - (n_0 \sin \theta_0)^2) < \p
 If we choose the square-root with positive imaginary part,
 $$\phi \leq \arg \sqrt{n_i^2 - (n_0 \sin \theta_0)^2} < \pi/2$$
 Therefore,
-$$-\pi/2 < -\phi \leq \arg \[ \frac{n_i^*}{n_i} \sqrt{n_i^2 - (n_0 \sin \theta_0)^2}\] < -2\phi+\pi/2 < \pi/2$$
+$$-\pi/2 < -\phi \leq \arg \left[ \frac{n_i^*}{n_i} \sqrt{n_i^2 - (n_0 \sin \theta_0)^2}\right] < -2\phi+\pi/2 < \pi/2$$
 That finishes the proof.
 
 \subsection{Implementation for $\Im n>0, \quad \Re n >0$}
