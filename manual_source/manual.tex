@@ -245,6 +245,8 @@ I've only checked the case I care about, $\Re n>0$ and $\Im n \geq 0$. In that c
 
 In more specialized cases, like negative-index materials ($\Re n <0$) or stimulated-emission media ($(\Im n)/(\Re n)<0$), results are not guaranteed! Please check this before using, if your starting or ending layer is one of these!
 
+[Stimulated-emission (a.k.a. gain) media have another problem too, even in the intermediate layers. This program will always find the \emph{finite} steady-state solution to Maxwell's equations. But if the system is unstable, the finite steady-state solution will not actually occur. Instead, the fields will get stronger and stronger, i.e. the system is a laser.]
+
 \section{Thick ``incoherent'' films: Introduction}
 That finishes the thin-film part of the program. Next, thick films. Here we are interested in hybrid structures containing both thick and thin layers (or even just thick layers). Light loses its coherence when traveling through the thick layers--i.e., the Fabry-Perot fringes are so close together that they cannot be resolved by the experimental measurement, due to factors such as random thickness variations, propagation angle variations, and/or wavelength variations. Instead of seeing the fringes, you just see the average.
 
