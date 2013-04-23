@@ -4,7 +4,8 @@ tmm - A transfer-matrix method optics package, for calculating
 reflection, transmission, absorption, and other relevant aspects of thin
 and thick multilayer (or single-layer) films.
 
-Written by Steven Byrnes, http://sjbyrnes.com
+Written by Steven Byrnes, http://sjbyrnes.com . Package lives at
+https://pypi.python.org/pypi/tmm
 
 Released under MIT license (Expat).
 
@@ -24,6 +25,9 @@ In tmm.examples you will find some sample calculations and plots.
 
 In tmm.tests you will find various tests that the package is coded
 correctly.
+
+In tmm.colors you will find extra functions for calculating the color of a
+multilayer thin film under reflected light.
 """
 
 from tmm_core import *

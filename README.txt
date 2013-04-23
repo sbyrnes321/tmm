@@ -8,6 +8,6 @@ This is a group of programs written in Python / NumPy for simulating light propa
 
 In addition to calculating how much light is transmitted and reflected, the program can calculate, at any given point in the structure, how much light is being absorbed there. This is a very important feature for solar-cell modeling, for example.
 
-It can also calculate the parameters measured in ellipsometry.
+It can also calculate the parameters measured in ellipsometry. It can also calculate the RGB or xyY color of a multilayer thin film (this requires colorpy, https://pypi.python.org/pypi/colorpy).
 
 For more information, see manual.pdf . Get it directly at http://sjbyrnes.com/fresnel_manual.pdf
