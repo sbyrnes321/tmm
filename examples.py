@@ -3,8 +3,7 @@
 Examples of plots and calculations using the tmm package.
 """
 
-#make division of integers work as expected
-from __future__ import division
+from __future__ import division, print_function
 
 from tmm import *
 from numpy import pi, linspace, inf, array
@@ -135,8 +134,8 @@ def sample5():
     Color calculations: What color is a air / thin SiO2 / Si wafer?
     """
     if not colors_were_imported:
-        print 'Error: Need colorpy for color calculations.'
-        print 'http://pypi.python.org/pypi/colorpy'
+        print('Error: Need colorpy for color calculations.')
+        print('http://pypi.python.org/pypi/colorpy')
         return
 
     # Crystalline silicon refractive index. Data from Palik via
@@ -165,7 +164,7 @@ def sample5():
     illuminant = colorpy.illuminants.get_illuminant_D65()
     spectrum = color.calc_spectrum(reflectances, illuminant)
     color_dict = color.calc_color(spectrum)
-    print 'air / 300nm SiO2 / Si --- rgb =', color_dict['rgb'], ', xyY =', color_dict['xyY']
+    print('air / 300nm SiO2 / Si --- rgb =', color_dict['rgb'], ', xyY =', color_dict['xyY'])
     plt.figure()
     color.plot_reflectances(reflectances,
                         title='air / 300nm SiO2 / Si -- '
@@ -188,8 +187,8 @@ def sample5():
         sRGB_list.append(color_dict['rgb'])
 
     # Plot those colors
-    print 'Making color vs SiO2 thickness graph. Compare to (for example)'
-    print 'http://www.htelabs.com/appnotes/sio2_color_chart_thermal_silicon_dioxide.htm'
+    print('Making color vs SiO2 thickness graph. Compare to (for example)')
+    print('http://www.htelabs.com/appnotes/sio2_color_chart_thermal_silicon_dioxide.htm')
     plt.figure()
     plt.plot([0,max_SiO2_thickness],[1,1])
     plt.xlim(0,max_SiO2_thickness)
