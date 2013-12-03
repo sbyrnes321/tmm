@@ -15,7 +15,7 @@ data_files = ['README.txt','LICENSE.txt','Changes.txt','manual.pdf']
 
 setup(
     name = "tmm",
-    version = '0.1.1',
+    version = '0.1.2',
     author = "Steven Byrnes",
     author_email = "steven.byrnes@gmail.com",
     description = descrip,
