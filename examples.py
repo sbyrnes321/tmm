@@ -3,9 +3,11 @@
 Examples of plots and calculations using the tmm package.
 """
 
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 
-from tmm import *
+from .tmm_core import (coh_tmm, unpolarized_RT, ellips,
+                       position_resolved, find_in_structure_with_inf)
+
 from numpy import pi, linspace, inf, array
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
@@ -13,7 +15,7 @@ import matplotlib.pyplot as plt
 try:
     import colorpy.illuminants
     import colorpy.colormodels
-    import tmm.color as color
+    from . import color
     colors_were_imported = True
 except ImportError:
     # without colorpy, you can't run sample5(), but everything else is fine.
@@ -134,8 +136,9 @@ def sample5():
     Color calculations: What color is a air / thin SiO2 / Si wafer?
     """
     if not colors_were_imported:
-        print('Error: Need colorpy for color calculations.')
-        print('http://pypi.python.org/pypi/colorpy')
+        print('Colorpy was not detected (or perhaps an error occurred when',
+              'loading it). You cannot do color calculations, sorry!',
+              'http://pypi.python.org/pypi/colorpy')
         return
 
     # Crystalline silicon refractive index. Data from Palik via
@@ -176,7 +179,7 @@ def sample5():
     
     # Calculate sRGB color versus thickness of SiO2
     max_SiO2_thickness = 600
-    SiO2_thickness_list = np.linspace(0,max_SiO2_thickness,num=80)
+    SiO2_thickness_list = linspace(0,max_SiO2_thickness,num=80)
     sRGB_list = []
     for SiO2_d in SiO2_thickness_list:
         d_list = [inf, SiO2_d, inf]

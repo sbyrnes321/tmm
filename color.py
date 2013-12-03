@@ -11,20 +11,21 @@ use colorpy.illuminants.get_illuminant_D65(), which approximates a phase of
 natural daylight. See http://en.wikipedia.org/wiki/Illuminant_D65 .
 """
 
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 
 from numpy import arange, array
 
 import numpy as np
 
-import tmm
+from .tmm_core import coh_tmm
 
 try:
     import colorpy
     import colorpy.illuminants
     import colorpy.ciexyz
 except ImportError:
-    print('Warning: Colorpy not detected. Film color calculations (in tmm.color)',
+    print('Warning: Colorpy not detected (or perhaps an error occurred when',
+          'loading it). Film color calculations (in tmm.color)',
           'will not work. http://pypi.python.org/pypi/colorpy')
 
 inf = float('inf')
@@ -81,7 +82,7 @@ def calc_reflectances(n_fn_list, d_list, th_0, pol='s', spectral_range='narrow')
     
     for lam_vac in lam_vac_list:
         n_list = [n_fn_list[i](lam_vac) for i in range(num_layers)]
-        R = tmm.coh_tmm(pol, n_list, d_list, th_0, lam_vac)['R']
+        R = coh_tmm(pol, n_list, d_list, th_0, lam_vac)['R']
         final_answer.append([lam_vac,R])
     final_answer = array(final_answer)
 

@@ -4,10 +4,14 @@ Tests to ensure tmm package was coded correctly. Use run_all() to
 run them all in order.
 """
 
-from __future__ import division, print_function
+from __future__ import division, print_function, absolute_import
 
-from tmm import *
-from numpy import pi, linspace
+from .tmm_core import (coh_tmm, inc_tmm, ellips, position_resolved,
+                       absorp_in_each_layer, snell, absorp_analytic_fn,
+                       interface_r, inc_absorp_in_each_layer,
+                       interface_R, interface_T, power_entering_from_r)
+
+from numpy import pi, linspace, inf, exp, cos, average, array, vstack, imag
 
 # "5 * degree" is 5 degrees expressed in radians
 # "1.2 / degree" is 1.2 radians expressed in degrees
@@ -289,7 +293,7 @@ def incoherent_test():
         R20 = coh_bdata['R']
         T02 = coh_data['T']
         T20 = coh_bdata['T']
-        P2 = exp(-4 * np.pi * d2
+        P2 = exp(-4 * pi * d2
                      * (n2 * cos(th2)).imag / lam_vac) #fraction passing through
         R23 = interface_R(pol,n2,n3,th2,th3)
         T23 = interface_T(pol,n2,n3,th2,th3)
@@ -325,9 +329,9 @@ def incoherent_test():
             coh_Rs.append(coh_data['R'])
             coh_Ts.append(coh_data['T'])
         print('Coherent with random thickness should agree with incoherent. '
-                + 'Discrepency is: ' + str(df(np.average(coh_Rs),inc_data['R'])))
+                + 'Discrepency is: ' + str(df(average(coh_Rs),inc_data['R'])))
         print('Coherent with random thickness should agree with incoherent. '
-                + 'Discrepency is: ' + str(df(np.average(coh_Ts),inc_data['T'])))
+                + 'Discrepency is: ' + str(df(average(coh_Ts),inc_data['T'])))
     #The coherent program with a thick substrate and randomly-varying wavelength
     #should agree with the incoherent program.
     n0 = 1+0.0j
@@ -350,7 +354,7 @@ def incoherent_test():
         coh_absorp /= num_pts
         print('Coherent with random wavelength should agree with incoherent. '
             + 'The two rows of this array should be the same:')
-        print(np.vstack((inc_absorp,coh_absorp)))
+        print(vstack((inc_absorp,coh_absorp)))
 
 def RT_test():
     """
@@ -390,7 +394,7 @@ def coh_overflow_test():
     n_list = [ 1., 2+.1j, 1+3j,  4.,  5.]
     d_list = [inf,    50,  1e5,  50, inf]
     lam = 200
-    alpha_d = np.imag(n_list[2]) * 4 * pi * d_list[2] / lam
+    alpha_d = imag(n_list[2]) * 4 * pi * d_list[2] / lam
     print('Very opaque layer: Calculation should involve e^(-', alpha_d, ')!')
     data = coh_tmm('s',n_list,d_list,0,lam)
     n_list2 = n_list[0:3]
@@ -409,7 +413,7 @@ def inc_overflow_test():
     d_list = [inf,  50,  1e5,  50, inf]
     c_list = ['i', 'i',  'i', 'i', 'i']
     lam = 200
-    alpha_d = np.imag(n_list[2]) * 4 * pi * d_list[2] / lam
+    alpha_d = imag(n_list[2]) * 4 * pi * d_list[2] / lam
     print('Very opaque layer: Calculation should involve e^(-', alpha_d, ')!')
     data = inc_tmm('s',n_list,d_list,c_list,0,lam)
     n_list2 = n_list[0:3]

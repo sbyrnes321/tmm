@@ -15,8 +15,7 @@ These functions are all imported into the main package (tmm) namespace,
 so you can call them with tmm.coh_tmm(...) etc.
 """
 
-#make division of integers work as expected
-from __future__ import division
+from __future__ import division, print_function, absolute_import
 
 from numpy import cos, inf, zeros, array, exp, conj, nan, isnan
 
@@ -237,7 +236,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     # errors. The criterion imag(delta) > 35 corresponds to single-pass
     # transmission < 1e-30 --- small enough that the exact value doesn't
     # matter.
-    for i in xrange(1, num_layers-1):
+    for i in range(1, num_layers-1):
         if delta[i].imag > 35:
             delta[i] = delta[i].real + 35j
     
@@ -246,7 +245,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     #j=i+1. (2D array is overkill but helps avoid confusion.)
     t_list = zeros((num_layers,num_layers),dtype=complex)
     r_list = zeros((num_layers,num_layers),dtype=complex)
-    for i in xrange(num_layers-1):
+    for i in range(num_layers-1):
         t_list[i,i+1] = interface_t(pol,n_list[i],n_list[i+1],
                                      th_list[i],th_list[i+1])
         r_list[i,i+1] = interface_r(pol,n_list[i],n_list[i+1],
@@ -258,13 +257,13 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     #M_list[n]. M_0 and M_{num_layers-1} are not defined.
     #My M is a bit different than Sernelius's, but Mtilde is the same.
     M_list = zeros((num_layers,2,2),dtype=complex)
-    for i in xrange(1,num_layers-1):
+    for i in range(1,num_layers-1):
         M_list[i] = (1/t_list[i,i+1]) * np.dot(
             make_2x2_array(exp(-1j*delta[i]), 0, 0, exp(1j*delta[i]),
                            dtype=complex),
             make_2x2_array(1, r_list[i,i+1], r_list[i,i+1], 1, dtype=complex))
     Mtilde = make_2x2_array(1,0,0,1, dtype=complex)
-    for i in xrange(1,num_layers-1):
+    for i in range(1,num_layers-1):
         Mtilde = np.dot(Mtilde,M_list[i])
     Mtilde = np.dot(make_2x2_array(1, r_list[0,1], r_list[0,1] ,1,
                                    dtype=complex)/t_list[0,1], Mtilde)
@@ -278,7 +277,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     vw_list=zeros((num_layers,2), dtype=complex)
     vw = array([[t],[0]])
     vw_list[-1,:] = np.transpose(vw)
-    for i in xrange(num_layers-2,0,-1):
+    for i in range(num_layers-2,0,-1):
         vw = np.dot(M_list[i], vw)
         vw_list[i,:] = np.transpose(vw)
 
@@ -408,7 +407,7 @@ def layer_starts(d_list):
     final_answer = zeros(len(d_list))
     final_answer[0] = -inf
     final_answer[1] = 0
-    for i in xrange(2,len(d_list)):
+    for i in range(2,len(d_list)):
         final_answer[i] = final_answer[i-1] + d_list[i-1]
     return final_answer
 
@@ -525,7 +524,7 @@ def absorp_in_each_layer(coh_tmm_data):
     power_entering_each_layer[0] = 1
     power_entering_each_layer[1] = coh_tmm_data['power_entering']
     power_entering_each_layer[-1] = coh_tmm_data['T']
-    for i in xrange(2,num_layers-1):
+    for i in range(2,num_layers-1):
         power_entering_each_layer[i] = position_resolved(i,0,coh_tmm_data)['poyn']
     final_answer = zeros(num_layers)
     final_answer[0:-1] = -np.diff(power_entering_each_layer)
@@ -593,7 +592,7 @@ def inc_group_layers(n_list,d_list,c_list):
     inc_from_stack = []
     stack_from_inc = []
     stack_in_progress = False
-    for alllayer_index in xrange(n_list.size):
+    for alllayer_index in range(n_list.size):
         if c_list[alllayer_index] == 'c': #coherent layer
             inc_from_all.append(nan)
             if not stack_in_progress: #this layer is starting new stack
@@ -705,7 +704,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     #coh_tmm_bdata_list[i] is the same stack as coh_tmm_data_list[i] but
     #with order of layers reversed
     coh_tmm_bdata_list = []
-    for i in xrange(num_stacks):
+    for i in range(num_stacks):
         coh_tmm_data_list.append(coh_tmm(pol,stack_n_list[i],
                                               stack_d_list[i],
                                               th_list[all_from_stack[i][0]],
@@ -718,7 +717,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     #P_list[i] is fraction not absorbed in a single pass through i'th incoherent
     #layer.
     P_list = zeros(num_inc_layers)
-    for inc_index in xrange(1,num_inc_layers-1): #skip 0'th and last (infinite)
+    for inc_index in range(1,num_inc_layers-1): #skip 0'th and last (infinite)
         i = all_from_inc[inc_index]
         P_list[inc_index] = exp(-4 * np.pi * d_list[i]
                      * (n_list[i] * cos(th_list[i])).imag / lam_vac)
@@ -733,7 +732,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     #initialize these arrays
     T_list = zeros((num_inc_layers,num_inc_layers))
     R_list = zeros((num_inc_layers,num_inc_layers))
-    for inc_index in xrange(num_inc_layers-1): #looking at interface i -> i+1
+    for inc_index in range(num_inc_layers-1): #looking at interface i -> i+1
         alllayer_index = all_from_inc[inc_index]
         nextstack_index = stack_from_inc[inc_index+1]
         if isnan(nextstack_index): #next layer is incoherent
@@ -774,7 +773,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
                      [R_list[0,1],
                       T_list[1,0]*T_list[0,1] - R_list[1,0]*R_list[0,1]]])
                 / T_list[0,1])
-    for i in xrange(1,num_inc_layers-1):
+    for i in range(1,num_inc_layers-1):
         L = np.dot(
            array([[1/P_list[i],0],[0,P_list[i]]]),
            array([[1,-R_list[i+1,i]],
@@ -793,7 +792,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     VW_list[0,:] = [nan,nan]
     VW = array([[T],[0]])
     VW_list[-1,:] = np.transpose(VW)
-    for i in xrange(num_inc_layers-2,0,-1):
+    for i in range(num_inc_layers-2,0,-1):
         VW = np.dot(L_list[i], VW)
         VW_list[i,:] = np.transpose(VW)
     
@@ -814,7 +813,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     #interface into the i'th incoherent layer from the previous (coherent or
     #incoherent) layer. See manual.
     power_entering_list=[1] #"1" by convention for infinite 0th layer.
-    for i in xrange(1,num_inc_layers):
+    for i in range(1,num_inc_layers):
         prev_stack_index = stack_from_inc[i]
         if isnan(prev_stack_index):
             #case where this layer directly follows another incoherent layer
