@@ -39,7 +39,7 @@
 
 \section{Introduction}
 
-Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 14 December 2012.
+Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 17 February 2014.
 
 This is a group of programs written in Python / NumPy for simulating light propagation in planar multilayer thin films, including the effects of multiple internal reflections and interference, using the ``Transfer Matrix Method''. It can also simulate combinations of thin and thick films (e.g. a thick piece of glass with a multi-layer antireflection coating on one side and a mirror on the other side), or purely thick films.
 
@@ -70,15 +70,23 @@ I have done a few consistency checks between my program and others. They tend to
 
 \section{Installation}
 
-Requires SciPy and NumPy to run. The ``examples'' also use Matplotlib, while the color calculation part requires ColorPy (\url{https://pypi.python.org/pypi/colorpy}). Tested in Python 2.7 and 3.3. It is very likely compatible with other versions, but I haven't checked. Install via \verb=pip= or just download it directly (it's pure python).
+Requires SciPy and NumPy to run. The ``examples'' also use Matplotlib, while the color calculation part requires ColorPy (\url{https://pypi.python.org/pypi/colorpy}). Tested in Python 2.7 and 3.3. It is very likely compatible with other versions, but I haven't checked. Install via \verb=pip= or \verb=easy_install=, or just download it directly (it's pure python, but you need to treat it as a package, not separate files. If you don't know what that means, read the next section).
 
 \subsection{Installation for dummies}
 
 If you've never used Python before, getting started can be a bit tricky. See \url{http://sjbyrnes.com/?page_id=67} for installation advice.
 
-You can install this package by typing \verb=pip install tmm= into a terminal / command line. Or, since the package is pure python and requires no setup or compilation, you can just download it directly. Put the \verb=tmm= folder somewhere that Python can find it. (If you're not sure, type \verb=import sys; sys.path= into IPython.)
+After that's set up, you want to install the \verb=tmm= package. Here are a few methods.
 
-To get going, try typing the following in IPython (pylab mode):
+The first possibility is, depending on how you installed Python, there may be a special easy interface for installing packages. For example, in WinPython, you download the package from \url{https://pypi.python.org/pypi/tmm} (it's called something like \verb=tmm-0.1.2.tar.gz=), open the WinPython Control Panel, and drag the file into it. All done!
+
+The second possibility is to download the package file from \url{https://pypi.python.org/pypi/tmm} (it's called something like \verb=tmm-0.1.2.tar.gz=), and unzip it. (On Windows you need an unzipping program, \url{http://www.7-zip.org/}). Your goal is to have a (normal, not zipped) folder named \verb=tmm= (lower-case), in which are all the \verb=.py= files (\verb=__init__.py= and \verb=tmm_core.py= and so on, but not \verb=setup.py=). You may need to move files or rename the folder to get things in this format. Now that you have this folder, put it somewhere that Python can find it. (If you're not sure, type \verb=import sys; sys.path= into your Python interactive console. Any folder on this list is an OK place to put your \verb=tmm= folder.) Exit and restart your Python interactive console, and you should have \verb=tmm= working.
+
+The third possibility is to open a command line or terminal and type \verb=easy_install tmm= or \verb=pip install tmm= (if you have \verb=pip=), while you are connected to the internet. Your computer will download and install the package.
+
+For the first and third possibility, the package source code winds up in a folder somewhere on your computer. If you want to look at it or edit it, you need to find it first! The easy way to find it is to type \verb=import tmm; tmm.__file__= into your Python console.
+
+To get going, try typing the following in IPython (pylab mode) or a Spyder console:
 
 \begin{verbatim}
 >> import tmm.examples
