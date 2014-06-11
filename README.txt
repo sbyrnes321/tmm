@@ -12,4 +12,4 @@ It can also calculate the parameters measured in ellipsometry. It can also calcu
 
 For more information, see manual.pdf . Get it directly at http://sjbyrnes.com/fresnel_manual.pdf
 
-Tested in Python 2.7 and 3.3. (However, the color calculations require colorpy, which (as of this writing) only works in Python 2.)
+Tested in Python 2.7 and 3.3. (If you want to do color calculations in Python 3, you need to use the Python-3-compatible version of colorpy `here <https://github.com/fish2000/ColorPy/>`_.)
