@@ -11,7 +11,7 @@ descrip = ("Simulate light propagation in multilayer thin and/or thick "
            "films using the fresnel equations and transfer matrix "
            "method.")
 
-data_files = ['README.txt','LICENSE.txt','Changes.txt','manual.pdf']
+data_files = ['README.rst','LICENSE.txt','Changes.txt','manual.pdf']
 
 setup(
     name = "tmm",
@@ -25,7 +25,7 @@ setup(
     packages=['tmm'],
     package_data={'tmm':data_files},
     package_dir={'tmm': '.'},
-    long_description=read('README.txt'),
+    long_description=read('README.rst'),
     install_requires=["numpy", "scipy"], 
     classifiers=[
         "Intended Audience :: Science/Research",
