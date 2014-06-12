@@ -177,17 +177,18 @@ def sample5():
                         title='air / 300nm SiO2 / Si -- '
                               'Reflected spectrum under D65 illumination')
     
-    # Calculate sRGB color versus thickness of SiO2
+    # Calculate irgb color (i.e. gamma-corrected sRGB display color rounded to
+    # integers 0-255) versus thickness of SiO2
     max_SiO2_thickness = 600
     SiO2_thickness_list = linspace(0,max_SiO2_thickness,num=80)
-    sRGB_list = []
+    irgb_list = []
     for SiO2_d in SiO2_thickness_list:
         d_list = [inf, SiO2_d, inf]
         reflectances = color.calc_reflectances(n_fn_list, d_list, th_0)
         illuminant = colorpy.illuminants.get_illuminant_D65()
         spectrum = color.calc_spectrum(reflectances, illuminant)
         color_dict = color.calc_color(spectrum)
-        sRGB_list.append(color_dict['rgb'])
+        irgb_list.append(color_dict['irgb'])
 
     # Plot those colors
     print('Making color vs SiO2 thickness graph. Compare to (for example)')
@@ -213,5 +214,5 @@ def sample5():
         y1 = 1
         poly_x = [x0,  x1,  x1, x0]
         poly_y = [y0, y0, y1, y1]
-        color_string = colorpy.colormodels.irgb_string_from_rgb(sRGB_list[i])
+        color_string = colorpy.colormodels.irgb_string_from_irgb(irgb_list[i])
         plt.fill(poly_x, poly_y, color_string, edgecolor=color_string)

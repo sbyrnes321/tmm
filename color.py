@@ -125,11 +125,14 @@ def calc_color(spectrum, scale=None, show_warnings=True):
         you can get orange but not brown, etc.
       * scale=0.789 multiplies X,Y,Z by 0.789. Any number > 0 is OK.
     
-    Returns a dictionary with rgb, xy, xyY, and XYZ. Of these, rgb is sRGB, the
-    standard for modern displays and printers (yes, gamma correction is
-    properly taken into account, see colorpy.colormodels source code).
-    xy, xyY and XYZ are defined as in
-    http://en.wikipedia.org/wiki/CIE_1931_color_space
+    Returns a dictionary with rgb, irgb, xy, xyY, and XYZ. Definitions:
+      * xy, xyY and XYZ are defined as in
+          http://en.wikipedia.org/wiki/CIE_1931_color_space
+      * rgb is the linear (i.e., proportional to intensity, not
+        gamma-corrected) version of sRGB.
+      * irgb is ready-to-display sRGB, i.e. it is clipped to the range 0-1,
+        and gamma-corrected, and rounded to three integers in the range 0-255.
+    (sRGB is the standard RGB used in modern displays and printers.)
     """
     assert (scale is None or scale == 'Y1'
             or (type(scale) is float and scale > 0))
@@ -147,7 +150,8 @@ def calc_color(spectrum, scale=None, show_warnings=True):
     xy = [X / (X + Y + Z), Y / (X + Y + Z)]
     xyY = [xy[0], xy[1], Y]
     rgb = colorpy.colormodels.rgb_from_xyz(XYZ)
-    return {'xy':xy, 'xyY':xyY, 'XYZ':XYZ, 'rgb':rgb}
+    irgb = colorpy.colormodels.irgb_from_rgb(rgb)
+    return {'xy':xy, 'xyY':xyY, 'XYZ':XYZ, 'rgb':rgb, 'irgb':irgb}
         
 def plot_reflectances(reflectances, filename='temp_plot.png', title='Reflectance', ylabel='Fraction reflected'):
     """
