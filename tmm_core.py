@@ -178,7 +178,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     medium from which the light enters, the last element should be the semi-
     infinite medium to which the light exits (if any exits).
     
-    th_0 is the angle of incidence 0 for normal, pi/2 for glancing.
+    th_0 is the angle of incidence: 0 for normal, pi/2 for glancing.
     Remember, for a dissipative incoming medium (n_list[0] is not real), th_0
     should be complex so that n0 sin(th0) is real (intensity is constant as
     a function of lateral position).
@@ -209,6 +209,10 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     d_list=array(d_list,dtype=float)
 
     #input tests
+    if ((hasattr(lam_vac, 'size') and lam_vac.size > 1)
+          or (hasattr(th_0, 'size') and th_0.size > 1)):
+        raise ValueError('This function is not vectorized; you need to run one '
+                         'calculation at a time (1 wavelength, 1 angle, etc.)')
     if (n_list.ndim != 1) or (d_list.ndim != 1) or (n_list.size != d_list.size):
         raise ValueError("Problem with n_list or d_list!")
     if (d_list[0] != inf) or (d_list[-1] != inf):
