@@ -243,6 +243,14 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     for i in range(1, num_layers-1):
         if delta[i].imag > 35:
             delta[i] = delta[i].real + 35j
+            if 'opacity_warning' not in globals():
+                global opacity_warning
+                opacity_warning = True
+                print("Warning: Layers that are almost perfectly opaque "
+                      "are modified to be slightly transmissive, "
+                      "allowing 1 photon in 10^30 to pass through. It's "
+                      "for numerical stability. This warning will not "
+                      "be shown again.")
     
     #t_list[i,j] and r_list[i,j] are transmission and reflection amplitudes,
     #respectively, coming from i, going to j. Only need to calculate this when
