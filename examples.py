@@ -107,6 +107,10 @@ def sample3():
             'Should agree with Handbook of Ellipsometry Fig. 1.14')
 
 def sample4():
+    """
+    Here is an example where we plot absorption and Poynting vector
+    as a function of depth.
+    """ 
     d_list = [inf, 100, 300, inf] #in nm
     n_list = [1, 2.2+0.2j, 3.3+0.3j, 1]
     th_0=pi/4

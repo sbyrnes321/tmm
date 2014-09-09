@@ -189,19 +189,20 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     lam_vac is vacuum wavelength of the light.
     
     Outputs the following as a dictionary (see manual for details)
-    r--reflection amplitude
-    t--transmission amplitude
-    R--reflected wave power (as fraction of incident)
-    T--transmitted wave power (as fraction of incident)
-    power_entering--Power entering the first layer, usually (but not always)
+    
+    * r--reflection amplitude
+    * t--transmission amplitude
+    * R--reflected wave power (as fraction of incident)
+    * T--transmitted wave power (as fraction of incident)
+    * power_entering--Power entering the first layer, usually (but not always)
       equal to 1-R (see manual).
-    vw_list-- n'th element is [v_n,w_n], the forward- and backward-traveling
+    * vw_list-- n'th element is [v_n,w_n], the forward- and backward-traveling
       amplitudes, respectively, in the n'th medium just after interface with
       (n-1)st medium.
-    kz_list--normal component of complex angular wavenumber for
+    * kz_list--normal component of complex angular wavenumber for
       forward-traveling wave in each layer.
-    th_list--(complex) propagation angle (in radians) in each layer
-    pol, n_list, d_list, th_0, lam_vac--same as input
+    * th_list--(complex) propagation angle (in radians) in each layer
+    * pol, n_list, d_list, th_0, lam_vac--same as input
 
     """
     #convert lists to numpy arrays if they're not already.
@@ -562,27 +563,28 @@ def inc_group_layers(n_list,d_list,c_list):
     An "alllayer index" labels all layers (all elements of d_list) 0,1,2,...
     
     Returns info about how the layers relate:
-    stack_d_list[i] = list of thicknesses of each coherent layer in the i'th
+    
+    * stack_d_list[i] = list of thicknesses of each coherent layer in the i'th
       stack, plus starting and ending with "inf"
-    stack_n_list[i] = list of refractive index of each coherent layer in the
+    * stack_n_list[i] = list of refractive index of each coherent layer in the
       i'th stack, plus the two surrounding incoherent layers
-    all_from_inc[i] = j means that the layer with incoherent index i has
+    * all_from_inc[i] = j means that the layer with incoherent index i has
       alllayer index j
-    inc_from_all[i] = j means that the layer with alllayer index i has
+    * inc_from_all[i] = j means that the layer with alllayer index i has
       incoherent index j. If j = nan then the layer is coherent.
-    all_from_stack[i1][i2] = j means that the layer with stack index i1 and
+    * all_from_stack[i1][i2] = j means that the layer with stack index i1 and
       within-stack index i2 has alllayer index j
-    stack_from_all[i] = [j1 j2] means that the layer with alllayer index i is
+    * stack_from_all[i] = [j1 j2] means that the layer with alllayer index i is
       part of stack j1 with withinstack-index j2. If stack_from_all[i] = nan
       then the layer is incoherent
-    inc_from_stack[i] = j means that the i'th stack comes after the layer
+    * inc_from_stack[i] = j means that the i'th stack comes after the layer
       with incoherent index j, and before the layer with incoherent index j+1.
-    stack_from_inc[i] = j means that the layer with incoherent index i comes
+    * stack_from_inc[i] = j means that the layer with incoherent index i comes
       immediately after the j'th stack. If j=nan, it is not immediately
       following a stack.
-    num_stacks = number of stacks
-    num_inc_layers = number of incoherent layers
-    num_layers = number of layers total
+    * num_stacks = number of stacks
+    * num_inc_layers = number of incoherent layers
+    * num_layers = number of layers total
     """
 
     if (n_list.ndim != 1) or (d_list.ndim != 1):
@@ -667,25 +669,27 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     
     See manual for details.
     
-    Outputs the following as a dictionary (see manual for details)
-    R--reflected wave power (as fraction of incident)
-    T--transmitted wave power (as fraction of incident)
-    VW_list-- n'th element is [V_n,W_n], the forward- and backward-traveling
+    Outputs the following as a dictionary (see manual for details):
+
+    * R--reflected wave power (as fraction of incident)
+    * T--transmitted wave power (as fraction of incident)
+    * VW_list-- n'th element is [V_n,W_n], the forward- and backward-traveling
       intensities, respectively, at the beginning of the n'th incoherent medium.
-    coh_tmm_data_list--n'th element is coh_tmm_data[n], the output of
+    * coh_tmm_data_list--n'th element is coh_tmm_data[n], the output of
       the coh_tmm program for the n'th "stack" (group of one or more
       consecutive coherent layers).
-    coh_tmm_bdata_list--n'th element is coh_tmm_bdata[n], the output of the
+    * coh_tmm_bdata_list--n'th element is coh_tmm_bdata[n], the output of the
       coh_tmm program for the n'th stack, but with the layers of the stack
       in reverse order.
-    stackFB_list--n'th element is [F,B], where F is light traveling forward
+    * stackFB_list--n'th element is [F,B], where F is light traveling forward
       towards the n'th stack and B is light traveling backwards towards the n'th
-      stack.
-    num_layers-- total number both coherent and incoherent.
-    power_entering_list--n'th element is the normalized Poynting vector
+      stack.    
+    * num_layers-- total number both coherent and incoherent.
+    * power_entering_list--n'th element is the normalized Poynting vector
       crossing the interface into the n'th incoherent layer from the previous
       (coherent or incoherent) layer.
-    Plus, all the outputs of inc_group_layers
+    * Plus, all the outputs of inc_group_layers
+
     """
     #convert lists to numpy arrays if they're not already.
     n_list=array(n_list)

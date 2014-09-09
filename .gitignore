@@ -1,4 +1,5 @@
 *.py[co]
+sphinx/_build/*
 
 # Packages
 *.egg

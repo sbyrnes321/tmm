@@ -117,21 +117,24 @@ def calc_color(spectrum, scale=None, show_warnings=True):
     spectrum is the output of calc_spectrum.
     
     scale is the scaling method. Possibilities are:
-      * scale=None means don't scale. This is usually what you want, bucause
-        the illuminant should be pre-scaled in an appropriate way.
-        (Specifically, it's scaled to get Y=1 for a perfect reflector.)
-      * scale='Y1' means that the intensity is increased or decreased in
-        order to set Y (the luminance) to 1. So you can get white but not gray,
-        you can get orange but not brown, etc.
-      * scale=0.789 multiplies X,Y,Z by 0.789. Any number > 0 is OK.
+
+    * scale=None means don't scale. This is usually what you want, bucause
+      the illuminant should be pre-scaled in an appropriate way.
+      (Specifically, it's scaled to get Y=1 for a perfect reflector.)
+    * scale='Y1' means that the intensity is increased or decreased in
+      order to set Y (the luminance) to 1. So you can get white but not gray,
+      you can get orange but not brown, etc.
+    * scale=0.789 multiplies X,Y,Z by 0.789. Any number > 0 is OK.
     
     Returns a dictionary with rgb, irgb, xy, xyY, and XYZ. Definitions:
-      * xy, xyY and XYZ are defined as in
-          http://en.wikipedia.org/wiki/CIE_1931_color_space
-      * rgb is the linear (i.e., proportional to intensity, not
-        gamma-corrected) version of sRGB.
-      * irgb is ready-to-display sRGB, i.e. it is clipped to the range 0-1,
-        and gamma-corrected, and rounded to three integers in the range 0-255.
+
+    * xy, xyY and XYZ are defined as in
+        http://en.wikipedia.org/wiki/CIE_1931_color_space
+    * rgb is the linear (i.e., proportional to intensity, not
+      gamma-corrected) version of sRGB.
+    * irgb is ready-to-display sRGB, i.e. it is clipped to the range 0-1,
+      and gamma-corrected, and rounded to three integers in the range 0-255.
+
     (sRGB is the standard RGB used in modern displays and printers.)
     """
     assert (scale is None or scale == 'Y1'
