@@ -10,6 +10,6 @@ In addition to calculating how much light is transmitted and reflected, the prog
 
 It can also calculate the parameters measured in ellipsometry. It can also calculate the RGB or xyY color of a multilayer thin film (this requires colorpy, https://pypi.python.org/pypi/colorpy).
 
-For more information, see manual.pdf . Get it directly at http://sjbyrnes.com/fresnel_manual.pdf
+For more information, see manual.pdf . Get it directly at http://sjbyrnes.com/fresnel_manual.pdf . For the list of all functions and how to call them, browse the source code or go to https://pythonhosted.org/tmm/
 
 Tested in Python 2.7 and 3.3. (If you want to do color calculations in Python 3, you need to use the Python-3-compatible version of colorpy `here <https://github.com/fish2000/ColorPy/>`_.)

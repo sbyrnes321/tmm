@@ -1,8 +1,24 @@
 tmm package
 ===========
 
+Module contents
+---------------
+
+.. automodule:: tmm
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
+
+tmm.tmm_core module
+-------------------
+
+.. automodule:: tmm.tmm_core
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 tmm.color module
 ----------------
@@ -20,14 +36,6 @@ tmm.examples module
     :undoc-members:
     :show-inheritance:
 
-tmm.setup module
-----------------
-
-.. automodule:: tmm.setup
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 tmm.tests module
 ----------------
 
@@ -36,19 +44,3 @@ tmm.tests module
     :undoc-members:
     :show-inheritance:
 
-tmm.tmm_core module
--------------------
-
-.. automodule:: tmm.tmm_core
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: tmm
-    :members:
-    :undoc-members:
-    :show-inheritance:
