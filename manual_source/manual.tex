@@ -39,7 +39,7 @@
 
 \section{Introduction}
 
-Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 17 February 2014.
+Written by Steve Byrnes, 2012. Please email me any feedback. My website is \url{http://sjbyrnes.com} . Last update/upload: 10 September 2014.
 
 This is a group of programs written in Python / NumPy for simulating light propagation in planar multilayer thin films, including the effects of multiple internal reflections and interference, using the ``Transfer Matrix Method''. It can also simulate combinations of thin and thick films (e.g. a thick piece of glass with a multi-layer antireflection coating on one side and a mirror on the other side), or purely thick films.
 
@@ -49,7 +49,7 @@ It can also calculate the parameters measured in ellipsometry.
 
 There are four files: (1) \verb=tmm_core.py= contains all the main programs, (2) \verb=color.py= has additional color-related functions, like calculating the RGB color of a thin film under reflected light, (3) \verb=examples.py= contains a few example calculations to get you started, and (4) \verb=tests.py= contains a number of programs that perform various tests and consistency checks to confirm that everything is coded and running correctly. There is also the standard \verb=__init__.py=, the home of the main \verb=tmm= namespace, into which are imported all the \verb=tmm_core= functions. [To run the color-theory related functions in \verb=color.py=, you need to download the package \verb=colorpy= at \url{https://pypi.python.org/pypi/colorpy/} . But even without that, you can still run all the other code.]
 
-I did not compile any API documentation (list of functions and parameters), except the source code itself. You should read \verb=tmm_core.py=: I tried hard to put complete information into each function docstring about what the function does and how to use it. Also look at \verb=examples.py= to see examples of various kinds of calculations and plots.
+The API information (list of functions and how to call them) is available at \url{https://pythonhosted.org/tmm/}. I also suggest to look at the functions in the \verb=examples= submodule to see examples of various kinds of calculations and plots. (If you're not sure how to find this code, it is online at \url{https://pythonhosted.org/tmm/_modules/tmm/examples.html})
 
 \section{Other people's programs}
 
@@ -326,13 +326,22 @@ $$\text{power entering} = \frac{\Re \left[ n_0 \cos \theta_0^* (1 +r) (1 - r^*) 
 
 The first term is what we expect, the second term is strange.
 
-To explain this funny result, start with how $R$ is defined (in the case of an absorbing semi-infinite medium). The most useful and sensible definition---and the one I'm using---is the one shown in Fig.~\ref{Rfig}: You should be able to say the amount of power going into the reflected beam, at a distance $|z|$ from the interface, \emph{after} the beams have spatially separated, by just calculating $R e^{-\alpha |z|}$ where $\alpha$ is the absorption coefficient. (In fact, that exact calculation is a key ingredient in the incoherent calculation.)
+To explain this funny result, start with how $R$ and $T$ are defined (in the case of an initial absorbing semi-infinite medium). As shown in Fig.~\ref{Rfig}, $R$ and $T$ are operationally defined as follows:
+\begin{itemize}
+\item Assume that the light starts out a large distance $L$ behind the first interface, with power $P_1$ flowing towards the interface.
+\item The light travels the distance $L$, bounces off, then travels the same big distance $L$ back through the initial medium, at which point it now has power $P_2$...
+\item $R$ is defined by $R=e^{2\alpha L} P_2 / P_1$, in the limit $L\rightarrow \infty$. (The exponential factor here cancels out the absorption in the initial medium, so that this limit exists.) (We don't really need $L \rightarrow \infty$; all that really matters is that $L$ is big enough that it is beyond the area where the incoming and outgoing beams have coherent interference.)
+\item Similarly, let $P_3$ be the flowing away from the last interface (immediately after the interface)...
+\item $T$ is defined as $T =e^{\alpha L} P_3 / P_1$, in the limit $L \rightarrow \infty$.
+\end{itemize}
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.5\textwidth]{Rfig.png}
 \caption{How the reflected intensity $R$ is defined. Electric field $E$ and power transported $P$ are shown.\label{Rfig}}
 \end{figure}
+
+(Are these good ways to define $R$ and $T$? Well, it depends on what you're trying to do. For example, if you are putting an antireflective coating on tinted glass, these are great definitions. They make it very easy to calculate the overall reflection and transmission. My incoherent tmm calculation is based on situations like that. So, I like these definitions, although I admit that they are not the only possible definitions.)
 
 More generally, we naively expect the Poynting vector for $z<0$ in Fig.~\ref{Rfig} to satisfy
 \be{Snoninterfered} \S(z)\cdot \z = e^{\alpha |z|} - R e^{-\alpha |z|} \qquad \text{[formula for without wave  interference]} \quad \ee
