@@ -266,7 +266,7 @@ For more on this topic see these references: Harbecke\footnote{\url{http://dx.do
 We have a number of incoherent layers 0,1,...,$N-1$. Let $V_i$ be the forward propagation \emph{intensity} and $W_i$ be the backwards \emph{intensity} at the \emph{beginning} of the $i$th incoherent layer. (Capital letters to distinguish from $v,w$, the amplitudes in the coherent program, see previous section.) Let $X_i$ and $Y_i$ be forward and backwards at the \emph{end} of the $i$th incoherent layer. ($X_i$ and $Y_i$ are not explicitly calculated in the program.) Let $T_{i,j}$ be transmissivity from the $i$th to $j$th incoherent layer (where $j=i\pm 1$, and $R_{i,j}$ the reflectivity. Then:
 $$Y_i = X_i R_{i,i+1} + W_{i+1} T_{i+1,i}$$
 $$V_{i+1} = X_i T_{i,i+1} + W_{i+1} R_{i+1,i}$$
-$$\smat X_i \\ Y_i \emat = \frac{1}{T_{i,i+1}} \smat 1 & -R_{i+1,i} \\  R_{i,i+1} & T_{i+1,i}T_i -  R_{i+1,i}R_{i,i+1} \emat \smat V_{i+1} \\ W_{i+1} \emat.$$
+$$\smat X_i \\ Y_i \emat = \frac{1}{T_{i,i+1}} \smat 1 & -R_{i+1,i} \\  R_{i,i+1} & T_{i+1,i}T_{i,i+1} -  R_{i+1,i}R_{i,i+1} \emat \smat V_{i+1} \\ W_{i+1} \emat.$$
 Let $P_i$ be the fraction of light that passes successfully through layer $i$ (in a single pass) without getting absorbed, calculated by
 $$P_i = e^{-\alpha d_i}, \quad \alpha = \frac{4\pi \Im[n_i \cos \theta_i]}{\lambda_{vac}}$$
 where $d_i$ is the layer thickness. Then:
