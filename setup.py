@@ -26,7 +26,6 @@ setup(
     package_data={'tmm':data_files},
     package_dir={'tmm': '.'},
     long_description=read('README.rst'),
-    install_requires=["numpy", "scipy"], 
     classifiers=[
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering",
