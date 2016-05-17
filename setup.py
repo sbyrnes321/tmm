@@ -11,7 +11,7 @@ descrip = ("Simulate light propagation in multilayer thin and/or thick "
            "films using the fresnel equations and transfer matrix "
            "method.")
 
-data_files = ['README.rst','LICENSE.txt','Changes.txt','manual.pdf']
+data_files = ['README.rst','LICENSE.txt','Changes.txt','manual.pdf','examples.ipynb']
 
 setup(
     name = "tmm",
