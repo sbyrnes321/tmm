@@ -33,33 +33,33 @@ inf = float('inf')
 def calc_reflectances(n_fn_list, d_list, th_0, pol='s', spectral_range='narrow'):
     """
     Calculate the reflection spectrum of a thin-film stack.
-    
+
     n_fn_list[m] should be a function that inputs wavelength in nm and
     outputs refractive index of the m'th layer. In other words,
     n_fn_list[2](456) == 1.53 + 0.4j mans that layer #2 has a refractive index
     of 1.53 + 0.4j at 456nm. These functions could be defined with
     scipy.interpolate.interp1d() for example.
-    
+
     pol, d_list and th_0 are defined as in tmm.coh_tmm ... but d_list
     MUST be in units of nanometers
-    
+
     spectral_range can be 'full' if all the functions in n_fn_list can take
     wavelength arguments between 360-830nm; or 'narrow' if some or all require
     arguments only in the range 400-700nm. The wavelengths outside the
     'narrow' range make only a tiny difference to the color, because they are
     almost invisible to the eye. If spectral_range is 'narrow', then the n(400)
     values are used for 360-400 and n(700) for 700-830nm
-    
+
     Returns a 2-column array where the first column is wavelength in nm
     (360,361,362,...,830) and the second column is reflectivity (from 0
     to 1, where 1 is a perfect mirror). This range is chosen to be
     consistent with colorpy.illuminants. See  colorpy.ciexyz.start_wl_nm etc.
     """
-    
+
     lam_vac_list = arange(360, 831)
-    
+
     num_layers = len(n_fn_list)
-    
+
     def extend_spectral_range(n_fn):
         """
         Starting with a narrow-spectrum refractive index function
@@ -74,12 +74,12 @@ def calc_reflectances(n_fn_list, d_list, th_0, pol='s', spectral_range='narrow')
             else:
                 return n_fn(lam)
         return extended_n_fn
-    
+
     if spectral_range == 'narrow':
         n_fn_list = [extend_spectral_range(n_fn) for n_fn in n_fn_list]
-    
+
     final_answer = []
-    
+
     for lam_vac in lam_vac_list:
         n_list = [n_fn_list[i](lam_vac) for i in range(num_layers)]
         R = coh_tmm(pol, n_list, d_list, th_0, lam_vac)['R']
@@ -104,7 +104,7 @@ def calc_spectrum(reflectances, illuminant):
         raise ValueError('Wavelength range is inconsistent...Both should be 360,361,...,830.\n'
         + 'reflectances[0]=' + str(reflectances[0]) + ', reflectances[-1]=' + str(reflectances[-1])
         + '\nilluminant[0]=' + str(illuminant[0]) + ', illuminant[-1]=' + str(reflectances[-1]))
-    
+
     final_answer = []
     for i,lam in enumerate(reflectances[:,0]):
         final_answer.append([lam, reflectances[i,1] * illuminant[i,1]])
@@ -113,9 +113,9 @@ def calc_spectrum(reflectances, illuminant):
 def calc_color(spectrum, scale=None, show_warnings=True):
     """
     Calculate the color in various representations.
-    
+
     spectrum is the output of calc_spectrum.
-    
+
     scale is the scaling method. Possibilities are:
 
     * scale=None means don't scale. This is usually what you want, bucause
@@ -125,7 +125,7 @@ def calc_color(spectrum, scale=None, show_warnings=True):
       order to set Y (the luminance) to 1. So you can get white but not gray,
       you can get orange but not brown, etc.
     * scale=0.789 multiplies X,Y,Z by 0.789. Any number > 0 is OK.
-    
+
     Returns a dictionary with rgb, irgb, xy, xyY, and XYZ. Definitions:
 
     * xy, xyY and XYZ are defined as in
@@ -155,7 +155,7 @@ def calc_color(spectrum, scale=None, show_warnings=True):
     rgb = colorpy.colormodels.rgb_from_xyz(XYZ)
     irgb = colorpy.colormodels.irgb_from_rgb(rgb)
     return {'xy':xy, 'xyY':xyY, 'XYZ':XYZ, 'rgb':rgb, 'irgb':irgb}
-        
+
 def plot_reflectances(reflectances, filename='temp_plot.png', title='Reflectance', ylabel='Fraction reflected'):
     """
     Makes nice colored plot of reflectances. reflectances is the output of

@@ -39,7 +39,7 @@ def sample1():
     # list of wavenumbers to plot in nm^-1
     ks=linspace(0.0001,.01,num=400)
     # initialize lists of y-values to plot
-    Rnorm=[] 
+    Rnorm=[]
     R45=[]
     for k in ks:
 		# For normal incidence, s and p polarizations are identical.
@@ -81,7 +81,7 @@ def sample2():
     plt.xlabel('Wavelength (nm)')
     plt.ylabel('Fraction of power transmitted')
     plt.title('Transmission at normal incidence')
-        
+
 
 def sample3():
     """
@@ -102,7 +102,7 @@ def sample3():
     plt.xlabel('SiO2 thickness (nm)')
     plt.ylabel('Ellipsometric angles (degrees)')
     plt.title('Ellipsometric parameters for air/SiO2/Si, varying '
-            'SiO2 thickness.\n' 
+            'SiO2 thickness.\n'
             '@ 70$^\circ$, 633nm. '
             'Should agree with Handbook of Ellipsometry Fig. 1.14')
 
@@ -110,14 +110,14 @@ def sample4():
     """
     Here is an example where we plot absorption and Poynting vector
     as a function of depth.
-    """ 
+    """
     d_list = [inf, 100, 300, inf] #in nm
     n_list = [1, 2.2+0.2j, 3.3+0.3j, 1]
     th_0=pi/4
     lam_vac=400
     pol='p'
     coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
-    
+
     ds = linspace(0,400,num=1000) #position in structure
     poyn=[]
     absor=[]
@@ -161,10 +161,10 @@ def sample5():
     SiO2_n_fn = lambda wavelength : 1.46
     # air refractive index
     air_n_fn = lambda wavelength : 1
-    
+
     n_fn_list = [air_n_fn, SiO2_n_fn, Si_n_fn]
     th_0 = 0
-    
+
     # Print the colors, and show plots, for the special case of 300nm-thick SiO2
     d_list = [inf, 300, inf]
     reflectances = color.calc_reflectances(n_fn_list, d_list, th_0)
@@ -180,7 +180,7 @@ def sample5():
     color.plot_spectrum(spectrum,
                         title='air / 300nm SiO2 / Si -- '
                               'Reflected spectrum under D65 illumination')
-    
+
     # Calculate irgb color (i.e. gamma-corrected sRGB display color rounded to
     # integers 0-255) versus thickness of SiO2
     max_SiO2_thickness = 600

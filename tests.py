@@ -40,9 +40,9 @@ def basic_test():
     d_list=[inf,2,3,inf]
     th_0=0.1
     lam_vac=100
-    
+
     print('The following should all be zero (within rounding errors):')
-    
+
     s_data=coh_tmm('s', n_list, d_list, th_0, lam_vac)
     print(df(s_data['r'], -0.60331226568845775-0.093522181653632019j))
     print(df(s_data['t'], 0.44429533471192989+0.16921936169383078j))
@@ -70,7 +70,7 @@ def position_resolved_test():
     layer=1
     dist=37
     print('The following should all be zero (within rounding errors):')
-    
+
     pol='p'
     coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
     print(df(coh_tmm_data['kz_list'][1],
@@ -89,7 +89,7 @@ def position_resolved_test():
     print(df(data['poyn'],0.5422594735025152))
     print(df(data['absor'],0.004041912286816303))
     print(df(1, sum(absorp_in_each_layer(coh_tmm_data))))
-    
+
     #Poynting vector derivative should equal absorption
     for pol in ['s','p']:
         coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
@@ -98,7 +98,7 @@ def position_resolved_test():
         print('Finite difference should approximate derivative. Difference is '
             + str(df((data1['absor']+data2['absor'])/2 ,
                      (data1['poyn']-data2['poyn'])/0.001)))
-    
+
     #Poynting vector at end should equal T
     layer=2
     dist=300
@@ -106,7 +106,7 @@ def position_resolved_test():
         coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
         data=position_resolved(layer,dist,coh_tmm_data)
         print(df(data['poyn'], coh_tmm_data['T']))
-    
+
     #Poynting vector at start should equal power_entering
     layer=1
     dist=0
@@ -114,7 +114,7 @@ def position_resolved_test():
         coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
         data=position_resolved(layer,dist,coh_tmm_data)
         print(df(data['poyn'], coh_tmm_data['power_entering']))
-    
+
     #Poynting vector should be continuous
     for pol in ['s','p']:
         layer=1
@@ -128,7 +128,7 @@ def position_resolved_test():
         data=position_resolved(layer,dist,coh_tmm_data)
         poyn2 = data['poyn']
         print(df(poyn1, poyn2))
-    
+
     return
 
 def position_resolved_test2():
@@ -153,7 +153,7 @@ def position_resolved_test2():
         coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
         data=position_resolved(layer,dist,coh_tmm_data)
         print(df(1, sum(absorp_in_each_layer(coh_tmm_data))))
-    
+
     #Poynting vector derivative should equal absorption
     for pol in ['s','p']:
         coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
@@ -170,7 +170,7 @@ def position_resolved_test2():
         coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
         data=position_resolved(layer,dist,coh_tmm_data)
         print(df(data['poyn'], coh_tmm_data['T']))
-    
+
     #Poynting vector at start should equal power_entering
     layer=1
     dist=0
@@ -207,7 +207,7 @@ def absorp_analytic_fn_test():
     d=d_list[layer]
     dist=37
     print('The following should all be zero (within rounding errors):')
-    
+
     for pol in ['s','p']:
         coh_tmm_data = coh_tmm(pol,n_list,d_list,th_0,lam_vac)
         expected_absorp = position_resolved(layer, dist, coh_tmm_data)['absor']
@@ -226,9 +226,9 @@ def incoherent_test():
     test inc_tmm(). To do: Add more tests.
     """
     print('The following should all be zero (within rounding errors):')
-    
+
     #3-incoherent-layer test, real refractive indices (so that R and T are the
-    #same in both directions)    
+    #same in both directions)
     n0 = 1
     n1 = 2
     n2 = 3
@@ -248,7 +248,7 @@ def incoherent_test():
         RR = R0 + R1*T0**2/(1-R0*R1)
         print(df(inc_data['R'],RR))
         print(df(inc_data['R']+inc_data['T'],1))
-    
+
     #One finite layer with incoherent layers on both sides. Should agree with
     #coherent program
     n0 = 1+0.1j
@@ -267,7 +267,7 @@ def incoherent_test():
         print(df(inc_data['R'],coh_data['R']))
         print(df(inc_data['T'],coh_data['T']))
         print(df(1,sum(inc_absorp_in_each_layer(inc_data))))
-    
+
     #One finite layer with three incoherent layers. Should agree with
     #manual calculation + coherent program
     n0 = 1+0.1j
@@ -361,7 +361,7 @@ def RT_test():
     Tests of formulas for R and T
     """
     print('The following should all be zero (within rounding errors):')
-    
+
     #When ni is real [see manual], R+T should equal 1
     ni = 2
     nf = 3.+0.2j
@@ -371,7 +371,7 @@ def RT_test():
         T = interface_T(pol,ni,nf,thi,thf)
         R = interface_R(pol,ni,nf,thi,thf)
         print(df(1,R+T))
-    
+
     #For a single interface, power_entering should equal T
     ni = 2+0.1j
     n00 = 1
@@ -386,7 +386,7 @@ def RT_test():
         print(df(pe,T))
 
     return
-    
+
 def coh_overflow_test():
     """
     Test whether very very opaque layers will break the coherent program
@@ -404,7 +404,7 @@ def coh_overflow_test():
     print('First entries of the following two lists should agree:')
     print(data['vw_list'])
     print(data2['vw_list'])
-   
+
 def inc_overflow_test():
     """
     Test whether very very opaque layers will break the incoherent program

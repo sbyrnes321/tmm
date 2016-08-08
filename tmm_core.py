@@ -9,7 +9,7 @@ case (i.e. thin films)
 
 inc_tmm(...) -- the transfer-matrix-method calculation in the incoherent
 case (i.e. films tens or hundreds of wavelengths thick, or whose
-thickness is not very uniform.
+thickness is not very uniform.)
 
 These functions are all imported into the main package (tmm) namespace,
 so you can call them with tmm.coh_tmm(...) etc.
@@ -28,7 +28,7 @@ EPSILON = sys.float_info.epsilon # typical floating-point calculation error
 def make_2x2_array(a, b, c, d, dtype=float):
     """
     Makes a 2x2 numpy array of [[a,b],[c,d]]
-    
+
     Same as "numpy.array([[a,b],[c,d]], dtype=float)", but ten times faster
     """
     my_array = np.empty((2,2),dtype=dtype)
@@ -218,26 +218,26 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     calculates everything you could ever want to know about how light
     propagates in it. (If performance is an issue, you can delete some of the
     calculations without affecting the rest.)
-    
+
     pol is light polarization, "s" or "p".
-    
+
     n_list is the list of refractive indices, in the order that the light would
     pass through them. The 0'th element of the list should be the semi-infinite
     medium from which the light enters, the last element should be the semi-
     infinite medium to which the light exits (if any exits).
-    
+
     th_0 is the angle of incidence: 0 for normal, pi/2 for glancing.
     Remember, for a dissipative incoming medium (n_list[0] is not real), th_0
     should be complex so that n0 sin(th0) is real (intensity is constant as
     a function of lateral position).
-    
+
     d_list is the list of layer thicknesses (front to back). Should correspond
     one-to-one with elements of n_list. First and last elements should be "inf".
-    
+
     lam_vac is vacuum wavelength of the light.
-    
+
     Outputs the following as a dictionary (see manual for details)
-    
+
     * r--reflection amplitude
     * t--transmission amplitude
     * R--reflected wave power (as fraction of incident)
@@ -283,7 +283,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     olderr = sp.seterr(invalid= 'ignore')
     delta = kz_list * d_list
     sp.seterr(**olderr)
-    
+
     # For a very opaque layer, reset delta to avoid divide-by-0 and similar
     # errors. The criterion imag(delta) > 35 corresponds to single-pass
     # transmission < 1e-30 --- small enough that the exact value doesn't
@@ -299,7 +299,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
                       "allowing 1 photon in 10^30 to pass through. It's "
                       "for numerical stability. This warning will not "
                       "be shown again.")
-    
+
     #t_list[i,j] and r_list[i,j] are transmission and reflection amplitudes,
     #respectively, coming from i, going to j. Only need to calculate this when
     #j=i+1. (2D array is overkill but helps avoid confusion.)
@@ -482,7 +482,7 @@ class absorp_analytic_fn:
     where a(z) is absorption at depth z, with z=0 being the start of the layer,
     and A1,A2,a1,a3 are real numbers, with a1>0, a3>0, and A3 is complex.
     The class stores these five parameters, as well as d, the layer thickness.
-    
+
     This gives absorption as a fraction of intensity coming towards the first
     layer of the stack.
     """
@@ -518,7 +518,7 @@ class absorp_analytic_fn:
             self.A3 = v * conj(w) * (-2*(kz.real)*(n*cos(conj(th))).imag /
                 (n_0*conj(cos(th_0))).real)
         return self
-    
+
     def copy(self):
         """
         Create copy of an absorp_analytic_fn object
@@ -527,7 +527,7 @@ class absorp_analytic_fn:
         (a.A1, a.A2, a.A3, a.a1, a.a3, a.d) = (
            self.A1, self.A2, self.A3, self.a1, self.a3, self.d)
         return a
-    
+
     def run(self,z):
         """
         Calculates absorption at a given depth z, where z=0 is the start of the
@@ -535,7 +535,7 @@ class absorp_analytic_fn:
         """
         return (self.A1*exp(self.a1 * z) + self.A2*exp(-self.a1 * z)
              + self.A3*exp(1j*self.a3*z) + conj(self.A3)*exp(-1j*self.a3*z))
-    
+
     def flip(self):
         """
         Flip the function front-to-back, to describe a(d-z) instead of a(z),
@@ -546,7 +546,7 @@ class absorp_analytic_fn:
         self.A1, self.A2 = newA1, newA2
         self.A3 = conj(self.A3 * exp(1j * self.a3 * self.d))
         return self
-        
+
     def scale(self, factor):
         """
         multiplies the absorption at each point by "factor".
@@ -555,7 +555,7 @@ class absorp_analytic_fn:
         self.A2 *= factor
         self.A3 *= factor
         return self
-    
+
     def add(self, b):
         """
         adds another compatible absorption analytical function
@@ -594,23 +594,23 @@ def absorp_in_each_layer(coh_tmm_data):
 def inc_group_layers(n_list,d_list,c_list):
     """
     Helper function for inc_tmm. Groups and sorts layer information.
-    
+
     See coh_tmm for definitions of n_list, d_list.
-    
+
     c_list is "coherency list". Each entry should be 'i' for incoherent or 'c'
     for 'coherent'.
-    
+
     A "stack" is a group of one or more consecutive coherent layers. A "stack
     index" labels the stacks 0,1,2,.... The "within-stack index" counts the
     coherent layers within the stack 1,2,3... [index 0 is the incoherent layer
     before the stack starts]
-    
+
     An "incoherent layer index" labels the incoherent layers 0,1,2,...
-    
+
     An "alllayer index" labels all layers (all elements of d_list) 0,1,2,...
-    
+
     Returns info about how the layers relate:
-    
+
     * stack_d_list[i] = list of thicknesses of each coherent layer in the i'th
       stack, plus starting and ending with "inf"
     * stack_n_list[i] = list of refractive index of each coherent layer in the
@@ -705,17 +705,17 @@ def inc_group_layers(n_list,d_list,c_list):
 def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     """
     Incoherent, or partly-incoherent-partly-coherent, transfer matrix method.
-    
+
     See coh_tmm for definitions of pol, n_list, d_list, th_0, lam_vac.
-    
+
     c_list is "coherency list". Each entry should be 'i' for incoherent or 'c'
     for 'coherent'.
-    
+
     If an incoherent layer has real refractive index (no absorption), then its
     thickness doesn't affect the calculation results.
-    
+
     See manual for details.
-    
+
     Outputs the following as a dictionary (see manual for details):
 
     * R--reflected wave power (as fraction of incident)
@@ -730,7 +730,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
       in reverse order.
     * stackFB_list--n'th element is [F,B], where F is light traveling forward
       towards the n'th stack and B is light traveling backwards towards the n'th
-      stack.    
+      stack.
     * num_layers-- total number both coherent and incoherent.
     * power_entering_list--n'th element is the normalized Poynting vector
       crossing the interface into the n'th incoherent layer from the previous
@@ -745,7 +745,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     #input tests
     if (np.real_if_close(n_list[0]*np.sin(th_0))).imag != 0:
         raise ValueError('Error in n0 or th0!')
-    
+
     group_layers_data = inc_group_layers(n_list,d_list,c_list)
     num_inc_layers = group_layers_data['num_inc_layers']
     num_stacks = group_layers_data['num_stacks']
@@ -756,12 +756,12 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     all_from_stack = group_layers_data['all_from_stack']
     stack_from_inc = group_layers_data['stack_from_inc']
     inc_from_stack = group_layers_data['inc_from_stack']
-    
+
     #th_list is a list with, for each layer, the angle that the light travels
     #through the layer. Computed with Snell's law. Note that the "angles" may be
     #complex!
     th_list = list_snell(n_list,th_0)
-    
+
     #coh_tmm_data_list[i] is the output of coh_tmm for the i'th stack
     coh_tmm_data_list = []
     #coh_tmm_bdata_list[i] is the same stack as coh_tmm_data_list[i] but
@@ -776,7 +776,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
                                               stack_d_list[i],
                                               th_list[all_from_stack[i][0]],
                                               lam_vac))
-    
+
     #P_list[i] is fraction not absorbed in a single pass through i'th incoherent
     #layer.
     P_list = zeros(num_inc_layers)
@@ -858,7 +858,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
     for i in range(num_inc_layers-2,0,-1):
         VW = np.dot(L_list[i], VW)
         VW_list[i,:] = np.transpose(VW)
-    
+
     #stackFB_list[n]=[F,B] means that F is light traveling forward towards n'th
     #stack and B is light traveling backwards towards n'th stack.
     #Reminder: inc_from_stack[i] = j means that the i'th stack comes after the
@@ -871,7 +871,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
             F = VW_list[prev_inc_index][0] * P_list[prev_inc_index]
         B = VW_list[prev_inc_index+1][1]
         stackFB_list.append([F,B])
-    
+
     #power_entering_list[i] is the normalized Poynting vector crossing the
     #interface into the i'th incoherent layer from the previous (coherent or
     #incoherent) layer. See manual.
@@ -904,12 +904,12 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
 def inc_absorp_in_each_layer(inc_data):
     """
     A list saying what proportion of light is absorbed in each layer.
-    
+
     Assumes all reflected light is eventually absorbed in the 0'th medium, and
     all transmitted light is eventually absorbed in the final medium.
-    
+
     Returns a list [layer0absorp, layer1absorp, ...]. Entries should sum to 1.
-    
+
     inc_data is output of incoherent_main()
     """
     #Reminder: inc_from_stack[i] = j means that the i'th stack comes after the
@@ -924,7 +924,7 @@ def inc_absorp_in_each_layer(inc_data):
     #stack and B is light traveling backwards towards n'th stack.
     stackFB_list = inc_data['stackFB_list']
     absorp_list = []
-    
+
     #loop through incoherent layers, excluding the final layer
     for i,power_entering in enumerate(power_entering_list[:-1]):
         if isnan(stack_from_inc[i+1]):
@@ -953,7 +953,7 @@ def inc_find_absorp_analytic_fn(layer, inc_data):
     """
     Outputs an absorp_analytic_fn object for a coherent layer within a
     partly-incoherent stack.
-    
+
     inc_data is output of incoherent_main()
     """
     j = inc_data['stack_from_all'][layer]
