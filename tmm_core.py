@@ -17,7 +17,7 @@ so you can call them with tmm.coh_tmm(...) etc.
 
 from __future__ import division, print_function, absolute_import
 
-from numpy import cos, inf, zeros, array, exp, conj, nan, isnan
+from numpy import cos, inf, zeros, array, exp, conj, nan, isnan, pi
 
 import scipy as sp
 import numpy as np
@@ -38,17 +38,60 @@ def make_2x2_array(a, b, c, d, dtype=float):
     my_array[1,1] = d
     return my_array
 
+def is_forward_angle(n, theta):
+    """
+    if a wave is traveling at angle theta from normal in a medium with index n,
+    calculate whether or not this is the forward-traveling wave (i.e., the one
+    going from front to back of the stack, like the incoming or outgoing waves,
+    but unlike the reflected wave). For real n & theta, the criterion is simply
+    -pi/2 < theta < pi/2, but for complex n & theta, it's more complicated.
+    See https://arxiv.org/abs/1603.02720 appendix D. If theta is the forward
+    angle, then (pi-theta) is the backward angle and vice-versa.
+    """
+    assert n.real * n.imag >= 0, ("For materials with gain, it's ambiguous which "
+                                  "beam is incoming vs outgoing. See "
+                                  "https://arxiv.org/abs/1603.02720 Appendix C.\n"
+                                  "n: " + str(n) + "   angle: " + str(theta))
+    ncostheta = n * cos(theta)
+    if abs(ncostheta.imag) > 100 * EPSILON:
+        # Either evanescent decay or lossy medium. Either way, the one that
+        # decays is the forward-moving wave
+        answer = (ncostheta.imag > 0)
+    else:
+        # Forward is the one with positive Poynting vector
+        # Poynting vector is Re[n cos(theta)] for s-polarization or
+        # Re[n cos(theta*)] for p-polarization, but it turns out they're consistent
+        # so I'll just assume s then check both below
+        answer = (ncostheta.real > 0)
+    # convert from numpy boolean to the normal Python boolean
+    answer = bool(answer)
+    # double-check the answer ... can't be too careful!
+    error_string = ("It's not clear which beam is incoming vs outgoing. Weird"
+                    " index maybe?\n"
+                    "n: " + str(n) + "   angle: " + str(theta))
+    if answer is True:
+        assert ncostheta.imag > -100 * EPSILON, error_string
+        assert ncostheta.real > -100 * EPSILON, error_string
+        assert (n * cos(theta.conjugate())).real > -100 * EPSILON, error_string
+    else:
+        assert ncostheta.imag < 100 * EPSILON, error_string
+        assert ncostheta.real < 100 * EPSILON, error_string
+        assert (n * cos(theta.conjugate())).real < 100 * EPSILON, error_string
+    return answer
+
 def snell(n_1,n_2,th_1):
     """
     return angle theta in layer 2 with refractive index n_2, assuming
     it has angle th_1 in layer with refractive index n_1. Use Snell's law. Note
     that "angles" may be complex!!
     """
-    #Important that the arcsin here is scipy.arcsin, not numpy.arcsin!! (They
+    #Important that the arcsin here is scipy.arcsin, not numpy.arcsin! (They
     #give different results e.g. for arcsin(2).)
-    #Use real_if_close because e.g. arcsin(2 + 1e-17j) is very different from
-    #arcsin(2) due to branch cut
-    return sp.arcsin(np.real_if_close(n_1*np.sin(th_1) / n_2))
+    th_2_guess = sp.arcsin(n_1*np.sin(th_1) / n_2)
+    if is_forward_angle(n_2, th_2_guess):
+        return th_2_guess
+    else:
+        return pi - th_2_guess
 
 def list_snell(n_list,th_0):
     """
@@ -56,11 +99,16 @@ def list_snell(n_list,th_0):
     using Snell's law. n_list is index of refraction of each layer. Note that
     "angles" may be complex!!
     """
-    #Important that the arcsin here is scipy.arcsin, not numpy.arcsin!! (They
+    #Important that the arcsin here is scipy.arcsin, not numpy.arcsin! (They
     #give different results e.g. for arcsin(2).)
-    #Use real_if_close because e.g. arcsin(2 + 1e-17j) is very different from
-    #arcsin(2) due to branch cut
-    return sp.arcsin(np.real_if_close(n_list[0]*np.sin(th_0) / n_list))
+    angles = sp.arcsin(n_list[0]*np.sin(th_0) / n_list)
+    # the first and last entry need to be the forward angle (the intermediate
+    # layers don't matter, see https://arxiv.org/abs/1603.02720 Section 5)
+    if not is_forward_angle(n_list[0], angles[0]):
+        angles[0] = pi - angles[0]
+    if not is_forward_angle(n_list[-1], angles[-1]):
+        angles[-1] = pi - angles[-1]
+    return angles
 
 
 def interface_r(polarization, n_i, n_f, th_i, th_f):
@@ -216,10 +264,9 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
                          'calculation at a time (1 wavelength, 1 angle, etc.)')
     if (n_list.ndim != 1) or (d_list.ndim != 1) or (n_list.size != d_list.size):
         raise ValueError("Problem with n_list or d_list!")
-    if (d_list[0] != inf) or (d_list[-1] != inf):
-        raise ValueError('d_list must start and end with inf!')
-    if abs((n_list[0]*np.sin(th_0)).imag) > 100*EPSILON:
-        raise ValueError('Error in n0 or th0!')
+    assert d_list[0] == d_list[-1] == inf, 'd_list must start and end with inf!'
+    assert abs((n_list[0]*np.sin(th_0)).imag) < 100*EPSILON, 'Error in n0 or th0!'
+    assert is_forward_angle(n_list[0], th_0), 'Error in n0 or th0!'
     num_layers = n_list.size
 
     #th_list is a list with, for each layer, the angle that the light travels

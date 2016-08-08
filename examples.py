@@ -220,3 +220,31 @@ def sample5():
         poly_y = [y0, y0, y1, y1]
         color_string = colorpy.colormodels.irgb_string_from_irgb(irgb_list[i])
         plt.fill(poly_x, poly_y, color_string, edgecolor=color_string)
+
+def sample6():
+    """
+    An example reflection plot with a surface plasmon resonance (SPR) dip.
+    Compare with http://doi.org/10.2320/matertrans.M2010003 ("Spectral and
+    Angular Responses of Surface Plasmon Resonance Based on the Kretschmann
+    Prism Configuration") Fig 6a
+    """
+    # list of layer thicknesses in nm
+    d_list = [inf,5,30,inf]
+    # list of refractive indices
+    n_list = [1.517, 3.719+4.362j, 0.130+3.162j, 1]
+    # wavelength in nm
+    lam_vac=633
+    # list of angles to plot
+    theta_list = linspace(30*degree, 60*degree, num=300)
+    # initialize lists of y-values to plot
+    Rp=[]
+    for theta in theta_list:
+        Rp.append(coh_tmm('p', n_list, d_list, theta, lam_vac)['R'])
+    plt.figure()
+    plt.plot(theta_list/degree, Rp, 'blue')
+    plt.xlabel('theta (degree)')
+    plt.ylabel('Fraction reflected')
+    plt.xlim(30, 60)
+    plt.ylim(0, 1)
+    plt.title('Reflection of p-polarized light with Surface Plasmon Resonance\n'
+              'Compare with http://doi.org/10.2320/matertrans.M2010003 Fig 6a')
