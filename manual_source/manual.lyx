@@ -136,7 +136,7 @@ http://sjbyrnes.com
 \end_inset
 
  .
- Last update/upload: March 2016.
+ Last update/upload: October 2016.
 \end_layout
 
 \begin_layout Standard
@@ -307,7 +307,22 @@ I have done a few consistency checks between my program and others.
  They tend to agree perfectly except in the tricky (and somewhat unusual)
  case of calculating reflected power or transmitted power when the semi-infinite
  incoming and/or outgoing medium has a complex index of refraction.
- [However, I'm confident that my formulas are correct, see below.]
+ Again, see 
+\series bold
+
+\begin_inset Flex Flex:URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://arxiv.org/abs/1603.02720
+\end_layout
+
+\end_inset
+
+
+\series default
+ for further discussion.
 \end_layout
 
 \begin_layout Section
@@ -337,9 +352,21 @@ https://pypi.python.org/pypi/colorpy
 \end_inset
 
 ).
- Tested in Python 2.7 and 3.3.
- It is very likely compatible with other versions, but I haven't checked.
- Install via 
+ Tested in Python 2.7 and 3.3--3.5.
+ (For color calculations in Python 3, you need the Python-3-compatible version
+ of ColorPy at 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/fish2000/ColorPy/
+\end_layout
+
+\end_inset
+
+ .
+ Install it via 
 \family typewriter
 pip
 \family default
@@ -348,64 +375,37 @@ pip
 easy_install
 \family default
 , or just download it directly (it's pure python, but you need to treat
- it as a package, not separate files.
- If you don't know what that means, read the next section).
-\end_layout
+ it as a package, not separate files).
+\begin_inset Foot
+status open
 
-\begin_layout Subsection
-Installation for dummies
-\end_layout
+\begin_layout Plain Layout
+People don't normally set up packages 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-If you've never used Python before, getting started can be a bit tricky.
+by hand
+\begin_inset Quotes erd
+\end_inset
+
+, but it's not too difficult in a case like this where the package is pure
+ python, rather than C code etc.
  See 
-\begin_inset Flex Flex:URL
-status collapsed
+\begin_inset Flex URL
+status open
 
 \begin_layout Plain Layout
 
-http://sjbyrnes.com/python
+https://docs.python.org/3/tutorial/modules.html
+\backslash
+#packages
 \end_layout
 
 \end_inset
 
- for installation advice.
-\end_layout
-
-\begin_layout Standard
-After that's set up, you want to install the 
-\family typewriter
-tmm
-\family default
- package.
- Here are a few methods.
-\end_layout
-
-\begin_layout Standard
-The first possibility is, depending on how you installed Python, there may
- be a special easy interface for installing packages.
- For example, in WinPython, you download the package from 
-\begin_inset Flex Flex:URL
-status collapsed
-
-\begin_layout Plain Layout
-
-https://pypi.python.org/pypi/tmm
-\end_layout
-
-\end_inset
-
- (it's called something like 
-\family typewriter
-tmm-0.1.2.tar.gz
-\family default
-), open the WinPython Control Panel, and drag the file into it.
- All done!
-\end_layout
-
-\begin_layout Standard
-The second possibility is to download the package file from 
-\begin_inset Flex Flex:URL
+ .
+ You download the package file from 
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -472,42 +472,91 @@ sys.path
 \family typewriter
 tmm
 \family default
- folder.) Exit and restart your Python interactive console, and you should
- have 
+ folder.
+ Note that the 
+\family typewriter
+tmm
+\family default
+ folder itself (i.e., the files inside it) should 
+\emph on
+not
+\emph default
+ be on the Python path.) Exit and restart your Python interactive console,
+ and you should have 
 \family typewriter
 tmm
 \family default
  working.
 \end_layout
 
-\begin_layout Standard
-The third possibility is to open a command line or terminal and type 
-\family typewriter
-easy_install
-\begin_inset space ~
 \end_inset
 
-tmm
-\family default
- or 
-\family typewriter
-pip_install
-\begin_inset space ~
-\end_inset
 
-tmm
-\family default
- (if you have 
-\family typewriter
-pip
-\family default
-), while you are connected to the internet.
- Your computer will download and install the package.
+\end_layout
+
+\begin_layout Subsection
+Installation for dummies
 \end_layout
 
 \begin_layout Standard
-For the first and third possibility, the package source code winds up in
- a folder somewhere on your computer.
+If you've never used Python before, check out 
+\begin_inset Flex Flex:URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://sjbyrnes.com/python
+\end_layout
+
+\end_inset
+
+ for advice on installation and getting started.
+\end_layout
+
+\begin_layout Standard
+Let's say you have Windows or Mac, and you just installed the Anaconda Python
+ distribution 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://www.continuum.io/downloads
+\end_layout
+
+\end_inset
+
+ .
+ The next step is to open the 
+\begin_inset Quotes eld
+\end_inset
+
+Anaconda command prompt
+\begin_inset Quotes erd
+\end_inset
+
+, connect to the internet, and then run the command 
+\family typewriter
+pip
+\begin_inset space ~
+\end_inset
+
+install
+\begin_inset space ~
+\end_inset
+
+tmm
+\family default
+ .
+ All done! 
+\end_layout
+
+\begin_layout Standard
+Note that when you install with 
+\family typewriter
+pip
+\family default
+, the package source code winds up in a folder somewhere on your computer.
  If you want to look at it or edit it, you need to find it first! The easy
  way to find it is to type 
 \family typewriter
