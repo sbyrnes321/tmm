@@ -3,25 +3,26 @@
 import os
 from setuptools import setup
 
-# Utility function to read the README file.
 def read(fname):
+    """utility function to read the README file"""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 descrip = ("Simulate light propagation in multilayer thin and/or thick "
            "films using the fresnel equations and transfer matrix "
            "method.")
 
-data_files = ['README.rst','LICENSE.txt','Changes.txt','manual.pdf','examples.ipynb']
+data_files = ['README.rst', 'LICENSE.txt', 'Changes.txt', 'manual.pdf',
+              'examples.ipynb']
 
 setup(
-    name = "tmm",
-    version = '0.1.6',
-    author = "Steven Byrnes",
-    author_email = "steven.byrnes@gmail.com",
-    description = descrip,
-    license = "MIT",
-    keywords = "optics, fresnel, reflection, absorption, photovoltaics, ellipsometry, transfer matrix method",
-    url = "http://pypi.python.org/pypi/tmm",
+    name="tmm",
+    version='0.1.6',
+    author="Steven Byrnes",
+    author_email="steven.byrnes@gmail.com",
+    description=descrip,
+    license="MIT",
+    keywords="optics, fresnel, reflection, absorption, photovoltaics, ellipsometry, transfer matrix method",
+    url="http://pypi.python.org/pypi/tmm",
     packages=['tmm'],
     package_data={'tmm':data_files},
     package_dir={'tmm': '.'},
