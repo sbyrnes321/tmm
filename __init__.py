@@ -9,9 +9,10 @@ https://pypi.python.org/pypi/tmm
 
 Released under MIT license (Expat).
 
-For detailed derivations of the formulas, see manual.pdf. (If you can't
-find it, go to http://sjbyrnes.com/fresnel_manual.pdf ) For the
-various functions and their explanations and syntaxes, browse tmm_core,
+For details see manual.pdf (should be included with the distribution, otherwise
+get it at http://sjbyrnes.com/fresnel_manual.pdf ). Physics background,
+conventions, and derivations are at https://arxiv.org/abs/1603.02720
+For the various functions and their explanations and syntaxes, browse tmm_core,
 particularly the docstrings of all the functions. Most important of
 these are:
 

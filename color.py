@@ -26,7 +26,8 @@ try:
 except ImportError:
     print('Warning: Colorpy not detected (or perhaps an error occurred when',
           'loading it). Film color calculations (in tmm.color)',
-          'will not work. http://pypi.python.org/pypi/colorpy')
+          'will not work. Main version is at http://pypi.python.org/pypi/colorpy',
+          'A Python 3 compatible edit is at https://github.com/fish2000/ColorPy/')
 
 inf = float('inf')
 

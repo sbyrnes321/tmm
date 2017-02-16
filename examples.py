@@ -142,7 +142,8 @@ def sample5():
     if not colors_were_imported:
         print('Colorpy was not detected (or perhaps an error occurred when',
               'loading it). You cannot do color calculations, sorry!',
-              'http://pypi.python.org/pypi/colorpy')
+              'Original version is at http://pypi.python.org/pypi/colorpy',
+              'A Python 3 compatible edit is at https://github.com/fish2000/ColorPy/')
         return
 
     # Crystalline silicon refractive index. Data from Palik via
