@@ -118,7 +118,7 @@ def sample4():
     pol = 'p'
     coh_tmm_data = coh_tmm(pol, n_list, d_list, th_0, lam_vac)
 
-    ds = linspace(0, 400, num=1000) #position in structure
+    ds = linspace(-50, 400, num=1000) #position in structure
     poyn = []
     absor = []
     for d in ds:

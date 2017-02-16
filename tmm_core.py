@@ -20,7 +20,7 @@ so you can call them with tmm.coh_tmm(...) etc.
 
 from __future__ import division, print_function, absolute_import
 
-from numpy import cos, inf, zeros, array, exp, conj, nan, isnan, pi
+from numpy import cos, inf, zeros, array, exp, conj, nan, isnan, pi, sin
 
 import numpy as np
 import scipy as sp
@@ -385,12 +385,28 @@ def unpolarized_RT(n_list, d_list, th_0, lam_vac):
     T = (s_data['T'] + p_data['T']) / 2.
     return {'R': R, 'T': T}
 
-def position_resolved(layer, dist, coh_tmm_data):
+def position_resolved(layer, distance, coh_tmm_data):
     """
-    Starting with output of coh_tmm(), calculate the Poynting vector
-    and absorbed energy density a distance "dist" into layer number "layer"
+    Starting with output of coh_tmm(), calculate the Poynting vector,
+    absorbed energy density, and E-field at a specific location. The
+    location is defined by (layer, distance), defined the same way as in
+    find_in_structure_with_inf(...).
+
+    Returns a dictionary containing:
+
+    * poyn - the component of Poynting vector normal to the interfaces
+    * absor - the absorbed energy density at that point
+    * Ex and Ey and Ez - the electric field amplitudes, where
+      z is normal to the interfaces and the light rays are in the x,z plane.
+
+    The E-field is in units where the incoming |E|=1; see
+    https://arxiv.org/pdf/1603.02720.pdf for formulas.
     """
-    vw = coh_tmm_data['vw_list'][layer]
+    if layer > 0:
+        v,w = coh_tmm_data['vw_list'][layer]
+    else:
+        v = 1
+        w = coh_tmm_data['r']
     kz = coh_tmm_data['kz_list'][layer]
     th = coh_tmm_data['th_list'][layer]
     n = coh_tmm_data['n_list'][layer]
@@ -398,9 +414,12 @@ def position_resolved(layer, dist, coh_tmm_data):
     th_0 = coh_tmm_data['th_0']
     pol = coh_tmm_data['pol']
 
+    assert ((layer >= 1 and 0 <= distance <= coh_tmm_data['d_list'][layer])
+                or (layer == 0 and distance <= 0))
+
     # Amplitude of forward-moving wave is Ef, backwards is Eb
-    Ef = vw[0] * exp(1j * kz * dist)
-    Eb = vw[1] * exp(-1j * kz * dist)
+    Ef = v * exp(1j * kz * distance)
+    Eb = w * exp(-1j * kz * distance)
 
     # Poynting vector
     if pol == 's':
@@ -416,45 +435,63 @@ def position_resolved(layer, dist, coh_tmm_data):
         absor = (n*conj(cos(th))*
                  (kz*abs(Ef-Eb)**2-conj(kz)*abs(Ef+Eb)**2)
                 ).imag / (n_0*conj(cos(th_0))).real
-    return({'poyn':poyn, 'absor':absor})
 
-def find_in_structure(d_list, dist):
+    # Electric field
+    if pol == 's':
+        Ex = 0
+        Ey = Ef + Eb
+        Ez = 0
+    elif pol == 'p':
+        Ex = (Ef - Eb) * cos(th)
+        Ey = 0
+        Ez = (-Ef - Eb) * sin(th)
+
+    return {'poyn': poyn, 'absor': absor, 'Ex': Ex, 'Ey': Ey, 'Ez': Ez}
+
+def find_in_structure(d_list, distance):
     """
     d_list is list of thicknesses of layers, all of which are finite.
 
-    dist is the distance from the front of the whole multilayer structure
+    distance is the distance from the front of the whole multilayer structure
     (i.e., from the start of layer 0.)
 
     Function returns [layer,z], where:
 
-    layer is what number layer you're at.
-    (For large enough dist, layer = len(d_list), even though d_list[layer]
-    doesn't exist in that case.)
+    * layer is what number layer you're at.
+    * z is the distance into that layer.
 
-    z is the distance into that layer.
+    For large distance, layer = len(d_list), even though d_list[layer] doesn't
+    exist in this case. For negative distance, return [-1, distance]
     """
     if sum(d_list) == inf:
         raise ValueError('This function expects finite arguments')
+    if distance < 0:
+        return [-1, distance]
     layer = 0
-    while (layer < len(d_list)) and (dist >= d_list[layer]):
-        dist -= d_list[layer]
+    while (layer < len(d_list)) and (distance >= d_list[layer]):
+        distance -= d_list[layer]
         layer += 1
-    return [layer, dist]
+    return [layer, distance]
 
-def find_in_structure_with_inf(d_list, dist):
+def find_in_structure_with_inf(d_list, distance):
     """
     d_list is list of thicknesses of layers [inf, blah, blah, ..., blah, inf]
 
-    dist is the distance from the front of the whole multilayer structure
+    distance is the distance from the front of the whole multilayer structure
     (i.e., from the start of layer 1.)
 
     Function returns [layer,z], where:
+
     * layer is what number layer you're at,
     * z is the distance into that layer.
 
+    For distance < 0, returns [0, distance]. So the first interface can be described as
+    either [0,0] or [1,0].
     """
-    [layer, dist] = find_in_structure(d_list[1:-1], dist)
-    return [layer+1, dist]
+    if distance < 0:
+        return [0, distance]
+    [layer, distance_in_layer] = find_in_structure(d_list[1:-1], distance)
+    return [layer+1, distance_in_layer]
 
 def layer_starts(d_list):
     """
