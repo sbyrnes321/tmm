@@ -17,7 +17,7 @@ from numpy import arange, array
 
 import numpy as np
 
-from .tmm_core import coh_tmm
+from . import coh_tmm
 
 try:
     import colorpy
