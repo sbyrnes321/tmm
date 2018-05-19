@@ -53,6 +53,7 @@ def sample1():
     plt.ylabel('Fraction reflected')
     plt.title('Reflection of unpolarized light at 0$^\circ$ incidence (blue), '
               '45$^\circ$ (purple)')
+    plt.show()
 
 def sample2():
     """
@@ -81,6 +82,7 @@ def sample2():
     plt.xlabel('Wavelength (nm)')
     plt.ylabel('Fraction of power transmitted')
     plt.title('Transmission at normal incidence')
+    plt.show()
 
 
 def sample3():
@@ -105,6 +107,7 @@ def sample3():
             'SiO2 thickness.\n'
             '@ 70$^\circ$, 633nm. '
             'Should agree with Handbook of Ellipsometry Fig. 1.14')
+    plt.show()
 
 def sample4():
     """
@@ -134,6 +137,7 @@ def sample4():
     plt.xlabel('depth (nm)')
     plt.ylabel('AU')
     plt.title('Local absorption (purple), Poynting vector (blue)')
+    plt.show()
 
 def sample5():
     """
@@ -221,6 +225,7 @@ def sample5():
         poly_y = [y0, y0, y1, y1]
         color_string = colorpy.colormodels.irgb_string_from_irgb(irgb_list[i])
         plt.fill(poly_x, poly_y, color_string, edgecolor=color_string)
+    plt.show()
 
 def sample6():
     """
@@ -249,3 +254,4 @@ def sample6():
     plt.ylim(0, 1)
     plt.title('Reflection of p-polarized light with Surface Plasmon Resonance\n'
               'Compare with http://doi.org/10.2320/matertrans.M2010003 Fig 6a')
+    plt.show()
