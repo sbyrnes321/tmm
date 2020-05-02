@@ -1,7 +1,9 @@
-#LyX 2.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 474
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
 \begin_document
 \begin_header
+\save_transient_properties true
+\origin unavailable
 \textclass article
 \begin_preamble
 \usepackage{fullpage}
@@ -47,16 +49,18 @@
 \language_package default
 \inputencoding auto
 \fontencoding default
-\font_roman default
-\font_sans default
-\font_typewriter default
-\font_math auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100
-\font_tt_scale 100
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -96,6 +100,7 @@
 \suppress_date false
 \justification true
 \use_refstyle 0
+\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -104,7 +109,10 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -122,10 +130,10 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Written by Steve Byrnes, 2012.
+Written by Steve Byrnes, originally in 2012.
  Please email me any feedback.
  My website is 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -135,8 +143,18 @@ http://sjbyrnes.com
 
 \end_inset
 
- .
- Last update/upload: October 2016.
+, and the code lives at 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/sbyrnes321/tmm
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -172,7 +190,7 @@ It can also calculate the parameters measured in ellipsometry.
 \series bold
 I wrote out derivations and discussions of the formulas and calculations
  implemented by this program at: 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -234,7 +252,7 @@ color.py
 colorpy
 \family default
  at 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -251,7 +269,7 @@ https://pypi.python.org/pypi/colorpy/
 \begin_layout Standard
 The API information (list of functions and how to call them) is available
  at 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -268,7 +286,7 @@ examples
 \family default
  submodule to see examples of various kinds of calculations and plots.
  (If you're not sure how to find this code, it is online at 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -289,7 +307,7 @@ Other people's programs
 There are many other free (and non-free) programs that do some or all of
  what this program does.
  I have a list at: 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -310,7 +328,7 @@ I have done a few consistency checks between my program and others.
  Again, see 
 \series bold
 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -341,7 +359,7 @@ examples
 
  also use Matplotlib, while the color calculation part requires ColorPy
  (
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -352,7 +370,7 @@ https://pypi.python.org/pypi/colorpy
 \end_inset
 
 ).
- Tested in Python 2.7 and 3.3--3.5.
+ Tested in Python 2.7 and 3.3+.
  (For color calculations in Python 3, you need the Python-3-compatible version
  of ColorPy at 
 \begin_inset Flex URL
@@ -421,7 +439,7 @@ tmm-0.1.2.tar.gz
 \family default
 ), and unzip it.
  (On Windows you need an unzipping program, 
-\begin_inset Flex Flex:URL
+\begin_inset Flex URL
 status collapsed
 
 \begin_layout Plain Layout
@@ -500,12 +518,12 @@ Installation for dummies
 
 \begin_layout Standard
 If you've never used Python before, check out 
-\begin_inset Flex Flex:URL
-status collapsed
+\begin_inset Flex URL
+status open
 
 \begin_layout Plain Layout
 
-http://sjbyrnes.com/python
+http://sjbyrnes.com/python.html
 \end_layout
 
 \end_inset
@@ -521,7 +539,7 @@ status open
 
 \begin_layout Plain Layout
 
-https://www.continuum.io/downloads
+https://www.anaconda.com/products/individual
 \end_layout
 
 \end_inset
@@ -574,17 +592,23 @@ tmm.__file__
 \end_layout
 
 \begin_layout Standard
-To get going, try typing the following in IPython (pylab mode) or a Spyder
- console:
+To get going, try running the following Python code: [In Jupyter notebooks
+ or Spyder, you don't need the first two lines.]
 \end_layout
 
 \begin_layout Verbatim
+>> import matplotlib.pyplot
+\end_layout
 
+\begin_layout Verbatim
+>> matplotlib.pyplot.ion()
+\end_layout
+
+\begin_layout Verbatim
 >> import tmm.examples
 \end_layout
 
 \begin_layout Verbatim
-
 >> tmm.examples.sample1()
 \end_layout
 
