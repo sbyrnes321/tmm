@@ -20,10 +20,10 @@ so you can call them with tmm.coh_tmm(...) etc.
 
 from __future__ import division, print_function, absolute_import
 
-from numpy import cos, inf, zeros, array, exp, conj, nan, isnan, pi, sin
+from numpy import cos, inf, zeros, array, exp, conj, nan, isnan, pi, sin, seterr
+from numpy.lib.scimath import arcsin
 
 import numpy as np
-import scipy as sp
 
 import sys
 EPSILON = sys.float_info.epsilon # typical floating-point calculation error
@@ -88,9 +88,9 @@ def snell(n_1, n_2, th_1):
     it has angle th_1 in layer with refractive index n_1. Use Snell's law. Note
     that "angles" may be complex!!
     """
-    # Important that the arcsin here is scipy.arcsin, not numpy.arcsin! (They
-    # give different results e.g. for arcsin(2).)
-    th_2_guess = sp.arcsin(n_1*np.sin(th_1) / n_2)
+    # Important that the arcsin here is numpy.lib.scimath.arcsin, not
+    # numpy.arcsin! (They give different results e.g. for arcsin(2).)
+    th_2_guess = arcsin(n_1*np.sin(th_1) / n_2)
     if is_forward_angle(n_2, th_2_guess):
         return th_2_guess
     else:
@@ -102,9 +102,9 @@ def list_snell(n_list, th_0):
     using Snell's law. n_list is index of refraction of each layer. Note that
     "angles" may be complex!!
     """
-    # Important that the arcsin here is scipy.arcsin, not numpy.arcsin! (They
-    # give different results e.g. for arcsin(2).)
-    angles = sp.arcsin(n_list[0]*np.sin(th_0) / n_list)
+    # Important that the arcsin here is numpy.lib.scimath.arcsin, not
+    # numpy.arcsin! (They give different results e.g. for arcsin(2).)
+    angles = arcsin(n_list[0]*np.sin(th_0) / n_list)
     # The first and last entry need to be the forward angle (the intermediate
     # layers don't matter, see https://arxiv.org/abs/1603.02720 Section 5)
     if not is_forward_angle(n_list[0], angles[0]):
@@ -282,9 +282,9 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
 
     # delta is the total phase accrued by traveling through a given layer.
     # Ignore warning about inf multiplication
-    olderr = sp.seterr(invalid='ignore')
+    olderr = seterr(invalid='ignore')
     delta = kz_list * d_list
-    sp.seterr(**olderr)
+    seterr(**olderr)
 
     # For a very opaque layer, reset delta to avoid divide-by-0 and similar
     # errors. The criterion imag(delta) > 35 corresponds to single-pass
