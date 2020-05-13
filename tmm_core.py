@@ -2,7 +2,7 @@
 """
 For information see the docstring of each function, and also see
 manual.pdf (should be included with the distribution, otherwise get it
-at http://sjbyrnes.com/fresnel_manual.pdf ). Physics background,
+at https://github.com/sbyrnes321/tmm/blob/master/manual.pdf ). Physics background,
 conventions, and derivations are at https://arxiv.org/abs/1603.02720
 
 The most two important functions are:
