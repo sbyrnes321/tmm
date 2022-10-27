@@ -994,7 +994,7 @@ def inc_find_absorp_analytic_fn(layer, inc_data):
     inc_data is output of incoherent_main()
     """
     j = inc_data['stack_from_all'][layer]
-    if isnan(j):
+    if np.any(isnan(j)):
         raise ValueError('layer must be coherent for this function!')
     [stackindex, withinstackindex] = j
     forwardfunc = absorp_analytic_fn()
