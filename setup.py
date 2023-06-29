@@ -14,6 +14,10 @@ descrip = ("Simulate light propagation in multilayer thin and/or thick "
 data_files = ['README.rst', 'LICENSE.txt', 'Changes.txt', 'manual.pdf',
               'examples.ipynb']
 
+dependencies = [
+        'numpy'
+]
+
 setup(
     name="tmm",
     version='0.1.8',
@@ -27,6 +31,7 @@ setup(
     package_data={'tmm':data_files},
     package_dir={'tmm': '.'},
     long_description=read('README.rst'),
+    install_requires=dependencies,
     classifiers=[
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering",
