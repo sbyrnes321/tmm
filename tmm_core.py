@@ -227,6 +227,9 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     pass through them. The 0'th element of the list should be the semi-infinite
     medium from which the light enters, the last element should be the semi-
     infinite medium to which the light exits (if any exits).
+    The provided thicknesses can have arbitrary units as long as they are consistent
+    with the unit of ``lam_vac``, e.g., if ``lam_vac`` is in nm, the thicknesses
+    should also be in nm.
 
     th_0 is the angle of incidence: 0 for normal, pi/2 for glancing.
     Remember, for a dissipative incoming medium (n_list[0] is not real), th_0
@@ -236,7 +239,8 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     d_list is the list of layer thicknesses (front to back). Should correspond
     one-to-one with elements of n_list. First and last elements should be "inf".
 
-    lam_vac is vacuum wavelength of the light.
+    lam_vac is vacuum wavelength of the light. It can have arbitrary units, but
+    it has to be consistent with the units of the thicknesses in ``d_list``.
 
     Outputs the following as a dictionary (see manual for details)
 
