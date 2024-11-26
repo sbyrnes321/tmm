@@ -26,3 +26,10 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# Python environment
+.env/*
+.venv*/
+
+# VS Code
+.vscode/
