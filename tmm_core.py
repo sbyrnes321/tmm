@@ -2,8 +2,9 @@
 """
 For information see the docstring of each function, and also see
 manual.pdf (should be included with the distribution, otherwise get it
-at https://github.com/sbyrnes321/tmm/blob/master/manual.pdf ). Physics background,
-conventions, and derivations are at https://arxiv.org/abs/1603.02720
+at https://github.com/sbyrnes321/tmm/blob/master/manual.pdf ). Physics
+background, conventions, definitions, and derivations are all at
+https://arxiv.org/abs/1603.02720
 
 The most two important functions are:
 
@@ -170,7 +171,7 @@ def T_from_t(pol, t, n_i, n_f, th_i, th_f):
     In the case that n_i,n_f,th_i,th_f are real, formulas simplify to
     T=|t|^2 * (n_f cos(th_f)) / (n_i cos(th_i)).
 
-    See manual for discussion of formulas
+    See https://arxiv.org/abs/1603.02720 for discussion of formulas
     """
     if pol == 's':
         return abs(t**2) * (((n_f*cos(th_f)).real) / (n_i*cos(th_i)).real)
@@ -184,7 +185,8 @@ def power_entering_from_r(pol, r, n_i, th_i):
     """
     Calculate the power entering the first interface of the stack, starting with
     reflection amplitude r. Normally this equals 1-R, but in the unusual case
-    that n_i is not real, it can be a bit different than 1-R. See manual.
+    that n_i is not real, it can be a bit different than 1-R. See
+    https://arxiv.org/abs/1603.02720
 
     n_i is refractive index of incident medium.
 
@@ -237,15 +239,23 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     one-to-one with elements of n_list. First and last elements should be "inf".
 
     lam_vac is vacuum wavelength of the light.
+    
+    This function, like everything else in the package, implicitly requires you
+    to pick a unit of length.You can use any unit, but keep it consistent.
+    For example, if you input the wavelength in nanometers, then you must also
+    input the layer thicknesses in nanometers. And then any angular wavenumber
+    outputs will be in radians per nanometer, and any absorption outputs will
+    be in (fraction of incoming light power per nanometer of depth), and so on.
 
-    Outputs the following as a dictionary (see manual for details)
+    Then the function outputs the following as a dictionary (see
+    https://arxiv.org/abs/1603.02720 for details)
 
     * r--reflection amplitude
     * t--transmission amplitude
     * R--reflected wave power (as fraction of incident)
     * T--transmitted wave power (as fraction of incident)
     * power_entering--Power entering the first layer, usually (but not always)
-      equal to 1-R (see manual).
+      equal to 1-R (see https://arxiv.org/abs/1603.02720 ).
     * vw_list-- n'th element is [v_n,w_n], the forward- and backward-traveling
       amplitudes, respectively, in the n'th medium just after interface with
       (n-1)st medium.
@@ -867,7 +877,7 @@ def inc_tmm(pol, n_list, d_list, c_list, th_0, lam_vac):
                     coh_tmm_bdata_list[nextstack_index]['T'])
 
     # L is the transfer matrix from the i'th to (i+1)st incoherent layer, see
-    # manual
+    # https://arxiv.org/abs/1603.02720
     L_list = [nan] # L_0 is not defined because 0'th layer has no beginning.
     Ltilde = (array([[1,-R_list[1,0]],
                      [R_list[0,1],
@@ -911,7 +921,7 @@ def inc_tmm(pol, n_list, d_list, c_list, th_0, lam_vac):
 
     # power_entering_list[i] is the normalized Poynting vector crossing the
     # interface into the i'th incoherent layer from the previous (coherent or
-    # incoherent) layer. See manual.
+    # incoherent) layer. See https://arxiv.org/abs/1603.02720 .
     power_entering_list = [1] #"1" by convention for infinite 0th layer.
     for i in range(1,num_inc_layers):
         prev_stack_index = stack_from_inc[i]
@@ -947,7 +957,7 @@ def inc_absorp_in_each_layer(inc_data):
 
     Returns a list [layer0absorp, layer1absorp, ...]. Entries should sum to 1.
 
-    inc_data is output of incoherent_main()
+    inc_data is output of inc_tmm()
     """
     # Reminder: inc_from_stack[i] = j means that the i'th stack comes after the
     # layer with incoherent index j.
@@ -991,7 +1001,7 @@ def inc_find_absorp_analytic_fn(layer, inc_data):
     Outputs an absorp_analytic_fn object for a coherent layer within a
     partly-incoherent stack.
 
-    inc_data is output of incoherent_main()
+    inc_data is output of inc_tmm()
     """
     j = inc_data['stack_from_all'][layer]
     if np.any(isnan(j)):
