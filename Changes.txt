@@ -10,3 +10,4 @@ version 0.1.5, 2016-05-16 -- update manual.pdf, tweak setup.py, add examples.ipy
 version 0.1.6, 2016-08-07 -- fix error in some calculations involving total internal reflection, add an example (sample6, a surface plasmon resonance calculation) that now works but previously did not.
 version 0.1.7, 2017-02-15 -- add E-field calculation to position_resolved(), edit find_in_structure() to make it easier to use position_resolved() for the 0'th layer, and minor formatting and documentation cleanup.
 version 0.1.8, 2020-05-13 -- update for a numpy/scipy API change, plus minor documentation updates
+version 0.1.9, 2024-11-26 -- some documentation fixes and clarifications, fix bug that can cause ValueError in inc_find_absorp_analytic_fn, modernize build system including adding .whl
