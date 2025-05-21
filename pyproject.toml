@@ -19,14 +19,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
 ]
+dependencies = [
+  "numpy",
+]
 
 [project.urls]
 Homepage = "http://pypi.python.org/pypi/tmm"
 Repository = "https://github.com/sbyrnes321/tmm"
 
-[tool.setuptools]
-packages = ["tmm"]
-package-dir = {"tmm" = "."}
+
+[tool.setuptools.package-dir]
+tmm = "tmm"
 
 [tool.setuptools.package-data]
 tmm = [
