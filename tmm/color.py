@@ -24,14 +24,17 @@ try:
     import colorpy.illuminants
     import colorpy.ciexyz
 except ImportError:
-    print('Warning: Colorpy not detected (or perhaps an error occurred when',
-          'loading it). Film color calculations (in tmm.color)',
-          'will not work. Main version is at http://pypi.python.org/pypi/colorpy',
-          'A Python 3 compatible edit is at https://github.com/fish2000/ColorPy/')
+    print(
+        "Warning: Colorpy not detected (or perhaps an error occurred when",
+        "loading it). Film color calculations (in tmm.color)",
+        "will not work. Main version is at http://pypi.python.org/pypi/colorpy",
+        "A Python 3 compatible edit is at https://github.com/fish2000/ColorPy/",
+    )
 
-inf = float('inf')
+inf = float("inf")
 
-def calc_reflectances(n_fn_list, d_list, th_0, pol='s', spectral_range='narrow'):
+
+def calc_reflectances(n_fn_list, d_list, th_0, pol="s", spectral_range="narrow"):
     """
     Calculate the reflection spectrum of a thin-film stack.
 
@@ -67,6 +70,7 @@ def calc_reflectances(n_fn_list, d_list, th_0, pol='s', spectral_range='narrow')
         n_fn(wavelength), create then return the corresponding full-spectrum
         refractive index function
         """
+
         def extended_n_fn(lam):
             if lam < 400:
                 return n_fn(400)
@@ -74,20 +78,22 @@ def calc_reflectances(n_fn_list, d_list, th_0, pol='s', spectral_range='narrow')
                 return n_fn(700)
             else:
                 return n_fn(lam)
+
         return extended_n_fn
 
-    if spectral_range == 'narrow':
+    if spectral_range == "narrow":
         n_fn_list = [extend_spectral_range(n_fn) for n_fn in n_fn_list]
 
     final_answer = []
 
     for lam_vac in lam_vac_list:
         n_list = [n_fn_list[i](lam_vac) for i in range(num_layers)]
-        R = coh_tmm(pol, n_list, d_list, th_0, lam_vac)['R']
-        final_answer.append([lam_vac,R])
+        R = coh_tmm(pol, n_list, d_list, th_0, lam_vac)["R"]
+        final_answer.append([lam_vac, R])
     final_answer = array(final_answer)
 
     return final_answer
+
 
 def calc_spectrum(reflectances, illuminant):
     """
@@ -98,18 +104,27 @@ def calc_spectrum(reflectances, illuminant):
       functions in colorpy.illuminants.  It is normally assumed that
       illuminant is normalized so that Y=1.
     """
-    #Both colorpy.illuminants and calc_reflec_spec should go from
-    #colorpy.ciexyz.start_wl_nm etc, so they should have matching
-    #wavelength specifications
-    if not np.all(reflectances[:,0] == illuminant[:,0]):
-        raise ValueError('Wavelength range is inconsistent...Both should be 360,361,...,830.\n'
-        + 'reflectances[0]=' + str(reflectances[0]) + ', reflectances[-1]=' + str(reflectances[-1])
-        + '\nilluminant[0]=' + str(illuminant[0]) + ', illuminant[-1]=' + str(reflectances[-1]))
+    # Both colorpy.illuminants and calc_reflec_spec should go from
+    # colorpy.ciexyz.start_wl_nm etc, so they should have matching
+    # wavelength specifications
+    if not np.all(reflectances[:, 0] == illuminant[:, 0]):
+        raise ValueError(
+            "Wavelength range is inconsistent...Both should be 360,361,...,830.\n"
+            + "reflectances[0]="
+            + str(reflectances[0])
+            + ", reflectances[-1]="
+            + str(reflectances[-1])
+            + "\nilluminant[0]="
+            + str(illuminant[0])
+            + ", illuminant[-1]="
+            + str(reflectances[-1])
+        )
 
     final_answer = []
-    for i,lam in enumerate(reflectances[:,0]):
-        final_answer.append([lam, reflectances[i,1] * illuminant[i,1]])
+    for i, lam in enumerate(reflectances[:, 0]):
+        final_answer.append([lam, reflectances[i, 1] * illuminant[i, 1]])
     return array(final_answer)
+
 
 def calc_color(spectrum, scale=None, show_warnings=True):
     """
@@ -138,37 +153,47 @@ def calc_color(spectrum, scale=None, show_warnings=True):
 
     (sRGB is the standard RGB used in modern displays and printers.)
     """
-    assert (scale is None or scale == 'Y1'
-            or (type(scale) is float and scale > 0))
+    assert scale is None or scale == "Y1" or (type(scale) is float and scale > 0)
     XYZ = colorpy.ciexyz.xyz_from_spectrum(spectrum)
     assert min(XYZ) >= 0
-    if scale == 'Y1' or type(scale) is float:
-        factor = (1.0 / XYZ[1] if scale == 'Y1' else scale)
+    if scale == "Y1" or type(scale) is float:
+        factor = 1.0 / XYZ[1] if scale == "Y1" else scale
         XYZ[0] *= factor
         XYZ[1] *= factor
         XYZ[2] *= factor
-    X,Y,Z = XYZ
+    X, Y, Z = XYZ
     if show_warnings:
         if Y > 1:
-            print('Warning: Oversaturated color! XYZ = ', XYZ)
+            print("Warning: Oversaturated color! XYZ = ", XYZ)
     xy = [X / (X + Y + Z), Y / (X + Y + Z)]
     xyY = [xy[0], xy[1], Y]
     rgb = colorpy.colormodels.rgb_from_xyz(XYZ)
     irgb = colorpy.colormodels.irgb_from_rgb(rgb)
-    return {'xy':xy, 'xyY':xyY, 'XYZ':XYZ, 'rgb':rgb, 'irgb':irgb}
+    return {"xy": xy, "xyY": xyY, "XYZ": XYZ, "rgb": rgb, "irgb": irgb}
 
-def plot_reflectances(reflectances, filename='temp_plot.png', title='Reflectance', ylabel='Fraction reflected'):
+
+def plot_reflectances(
+    reflectances,
+    filename="temp_plot.png",
+    title="Reflectance",
+    ylabel="Fraction reflected",
+):
     """
     Makes nice colored plot of reflectances. reflectances is the output of
     calc_reflectances(...)
     """
     colorpy.plots.spectrum_plot(reflectances, title, filename, ylabel=ylabel)
 
-def plot_spectrum(spectrum, filename='temp_plot.png', title='Reflected light under illumination', ylabel='Intensity (a.u.)'):
+
+def plot_spectrum(
+    spectrum,
+    filename="temp_plot.png",
+    title="Reflected light under illumination",
+    ylabel="Intensity (a.u.)",
+):
     """
     Makes nice colored plot of the reflected color spectrum you see under a
     certain illuminant. spectrum is the output of
     calc_spectrum(...)
     """
     colorpy.plots.spectrum_plot(spectrum, title, filename, ylabel=ylabel)
-

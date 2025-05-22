@@ -31,6 +31,7 @@ correctly.
 In tmm.colors you will find extra functions for calculating the color of a
 multilayer thin film under reflected light.
 """
+
 from __future__ import division, print_function, absolute_import
 
 from .tmm_core import *
