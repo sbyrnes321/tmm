@@ -281,8 +281,6 @@ class TestAbsorbAnalytics(unittest.TestCase):
                 absorp_fn2.run(dist_from_other_side), expected_absorp
             )
 
-        return
-
 
 class TestIncoherentStack(unittest.TestCase):
     def test_incoherent1(self):
@@ -496,3 +494,107 @@ class TestOverflow(unittest.TestCase):
         np.testing.assert_allclose(
             data["power_entering_list"][0:3], data2["power_entering_list"][0:3]
         )
+
+
+class TestVectorized(unittest.TestCase):
+    """Run some of the previous tests with vectorized data"""
+
+    n_list = [1, 2 + 4j, 3 + 0.3j, 1 + 0.1j]
+    n_list = np.stack([n_list] * 2, axis=-1)
+    d_list = [np.inf, 2, 3, np.inf]
+    th_0 = 0.1
+    lam_vac = [100, 100]
+
+    def test_coh_stack_rt(self):
+        s_data = coh_tmm("s", self.n_list, self.d_list, self.th_0, self.lam_vac)
+
+        np.testing.assert_allclose(
+            s_data["r"], [-0.60331226568845775 - 0.093522181653632019j] * 2
+        )
+        np.testing.assert_allclose(
+            s_data["t"], [0.44429533471192989 + 0.16921936169383078j] * 2
+        )
+        np.testing.assert_allclose(s_data["R"], [0.37273208839139516] * 2)
+        np.testing.assert_allclose(s_data["T"], [0.22604491247079261] * 2)
+
+        p_data = coh_tmm("p", self.n_list, self.d_list, self.th_0, self.lam_vac)
+
+        np.testing.assert_allclose(
+            p_data["r"], [0.60102654255772481 + 0.094489146845323682j] * 2
+        )
+        np.testing.assert_allclose(
+            p_data["t"], [0.4461816467503148 + 0.17061408427088917j] * 2
+        )
+        np.testing.assert_allclose(p_data["R"], [0.37016110373044969] * 2)
+        np.testing.assert_allclose(p_data["T"], [0.22824374314132009] * 2)
+
+    def test_coh_stack_ellipso(self):
+        ellips_data = ellips(self.n_list, self.d_list, self.th_0, self.lam_vac)
+        np.testing.assert_allclose(ellips_data["psi"], [0.78366777347038352] * 2)
+        np.testing.assert_allclose(ellips_data["Delta"], [0.0021460774404193292] * 2)
+
+    def test_incoherent(self):
+        # 3-incoherent-layer test, real refractive indices (so that R and T are the
+        # same in both directions)
+        n0 = 1
+        n1 = 2
+        n2 = 3
+        n_list = [n0, n1, n2]
+        n_list = np.stack([n_list] * 2, axis=-1)
+        d_list = [np.inf, 567, np.inf]
+        c_list = ["i", "i", "i"]
+        th0 = np.pi / 3
+        th1 = snell(n0, n1, th0)
+        th2 = snell(n0, n2, th0)
+        lam_vac = [400, 400]
+
+        for pol in ["s", "p"]:
+            inc_data = inc_tmm(pol, n_list, d_list, c_list, th0, lam_vac)
+            R0 = abs(interface_r(pol, n0, n1, th0, th1) ** 2)
+            R1 = abs(interface_r(pol, n1, n2, th1, th2) ** 2)
+            T0 = 1 - R0
+            RR = R0 + R1 * T0**2 / (1 - R0 * R1)
+            np.testing.assert_allclose(inc_data["R"], RR)
+            np.testing.assert_allclose(inc_data["R"] + inc_data["T"], [1, 1])
+
+    def test_poynting(self):
+        d_list = [np.inf, 100, 300, np.inf]  # in nm
+        n00 = 1
+        th00 = np.pi / 4
+        n0 = 1 + 0.1j
+        th_0 = snell(n00, n0, th00)
+        n_list = [n0, 2.2 + 0.2j, 3.3 + 0.3j, 1 + 0.4j]
+        n_list = np.stack([n_list] * 2, axis=-1)
+        lam_vac = [400, 400]
+        layer = 1
+        dist = 37
+
+        for pol in ["s", "p"]:
+            coh_tmm_data = coh_tmm(pol, n_list, d_list, th_0, lam_vac)
+            data = position_resolved(layer, dist, coh_tmm_data)
+            np.testing.assert_allclose([1, 1], sum(absorp_in_each_layer(coh_tmm_data)))
+
+    def test_absorb_analytics(self):
+        d_list = [np.inf, 100, 300, np.inf]  # in nm
+        n_list = [1, 2.2 + 0.2j, 3.3 + 0.3j, 1]
+        n_list = np.stack([n_list] * 2, axis=-1)
+        th_0 = np.pi / 4
+        lam_vac = [400, 400]
+        layer = 1
+        d = d_list[layer]
+        dist = 37
+
+        layer = 1
+        d = d_list[layer]
+        dist = 37
+        for pol in ["s", "p"]:
+            coh_tmm_data = coh_tmm(pol, n_list, d_list, th_0, lam_vac)
+            expected_absorp = position_resolved(layer, dist, coh_tmm_data)["absor"]
+            absorp_fn = absorp_analytic_fn()
+            absorp_fn.fill_in(coh_tmm_data, layer)
+            np.testing.assert_allclose(absorp_fn.run(dist), expected_absorp)
+            absorp_fn2 = absorp_fn.copy().flip()
+            dist_from_other_side = d - dist
+            np.testing.assert_allclose(
+                absorp_fn2.run(dist_from_other_side), expected_absorp
+            )
