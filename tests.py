@@ -12,6 +12,7 @@ from .tmm_core import (coh_tmm, inc_tmm, ellips, position_resolved,
                        interface_R, interface_T, power_entering_from_r)
 
 from numpy import pi, linspace, inf, exp, cos, average, array, vstack, imag
+import numpy as np
 
 # "5 * degree" is 5 degrees expressed in radians
 # "1.2 / degree" is 1.2 radians expressed in degrees
@@ -22,6 +23,7 @@ def run_all():
     basic_test()
     position_resolved_test()
     position_resolved_test2()
+    position_resolved_absorbing_exit_test()
     absorp_analytic_fn_test()
     incoherent_test()
     RT_test()
@@ -194,6 +196,24 @@ def position_resolved_test2():
         print(df(poyn1, poyn2))
 
     return
+
+def position_resolved_absorbing_exit_test():
+    """A zero backward wave must stay finite deep in the exit medium."""
+    for pol in ['s', 'p']:
+        n = 1.5 + 0.1j
+        lam_vac = 500
+        data = coh_tmm(pol, [1, n], [inf, inf], 0, lam_vac)
+        # At normal incidence, Fresnel transmission times Beer-Lambert decay.
+        transmission = n.real * abs(2 / (1 + n))**2
+        attenuation = 4 * pi * n.imag / lam_vac
+        for distance in [0, 100, 1e6]:
+            result = position_resolved(1, distance, data)
+            expected = transmission * exp(-attenuation * distance)
+            np.testing.assert_allclose(result['poyn'], expected, atol=0, rtol=1e-12)
+            np.testing.assert_allclose(result['absor'], attenuation * expected,
+                                       atol=0, rtol=1e-12)
+            assert np.isfinite([result['Ex'], result['Ey'], result['Ez']]).all()
+
 
 def absorp_analytic_fn_test():
     """

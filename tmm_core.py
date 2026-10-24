@@ -429,7 +429,8 @@ def position_resolved(layer, distance, coh_tmm_data):
 
     # Amplitude of forward-moving wave is Ef, backwards is Eb
     Ef = v * exp(1j * kz * distance)
-    Eb = w * exp(-1j * kz * distance)
+    # A zero backward wave stays zero even if its exponential overflows.
+    Eb = 0 if w == 0 else w * exp(-1j * kz * distance)
 
     # Poynting vector
     if pol == 's':
